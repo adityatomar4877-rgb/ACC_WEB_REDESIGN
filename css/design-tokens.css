@@ -1,0 +1,119 @@
+/**
+ * AMITY CODING CLUB - DESIGN TOKENS
+ * Synthesizing Apple's visual restraint & strong typography
+ * with Airbnb's approachable geometry and human interaction.
+ */
+
+:root {
+  /* Canvas & Background Colors */
+  --canvas-primary: #FFFFFF;
+  --canvas-secondary: #F8F9FA;
+  --canvas-subtle: #F3F4F6;
+  --canvas-dark: #121316;
+  --canvas-dark-elevated: #1A1B1F;
+  --canvas-dark-card: #202227;
+
+  /* Typography & Ink Colors */
+  --ink-primary: #111111;
+  --ink-heading: #1D1D1F;
+  --ink-secondary: #666666;
+  --ink-muted: #888888;
+  --ink-subtle: #9CA3AF;
+  --ink-inverse: #FFFFFF;
+  --ink-inverse-secondary: #A1A1A6;
+
+  /* Borders & Dividers */
+  --hairline-ultra-light: #F0F0F2;
+  --hairline: #E5E7EB;
+  --hairline-medium: #D1D5DB;
+  --hairline-dark: #2A2B30;
+  --hairline-dark-subtle: #1F2024;
+
+  /* Action & Accent Colors */
+  --accent-primary: #0066CC;
+  --accent-hover: #0071E3;
+  --accent-active: #0055B3;
+  --accent-subtle: rgba(0, 102, 204, 0.08);
+  --accent-border: rgba(0, 102, 204, 0.25);
+  --accent-on-dark: #2997FF;
+
+  /* Status Colors */
+  --status-online: #22C55E;
+  --status-online-glow: rgba(34, 197, 94, 0.35);
+  --status-warning: #F59E0B;
+  --status-purple: #8B5CF6;
+  --status-cyan: #06B6D4;
+
+  /* Code Syntax Palette (Restrained, Apple-like) */
+  --code-bg: #FFFFFF;
+  --code-border: #E5E7EB;
+  --code-text: #1E293B;
+  --code-line-num: #94A3B8;
+  --code-keyword: #8B5CF6;   /* const, function, return */
+  --code-string: #10B981;    /* 'Build. Learn. Ship.' */
+  --code-number: #0284C7;    /* 1248, 84, 42 */
+  --code-function: #0066CC;  /* makeImpact, forEach */
+  --code-variable: #334155;  /* amityCodingClub, ideas */
+  --code-comment: #94A3B8;   /* comments */
+
+  /* Typography Stack */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Typography Scales */
+  --text-hero: clamp(3rem, 5.5vw, 4.75rem);
+  --text-h1: clamp(2.25rem, 4vw, 3.25rem);
+  --text-h2: clamp(1.75rem, 3vw, 2.25rem);
+  --text-h3: 1.5rem;
+  --text-h4: 1.25rem;
+  --text-lead: 1.1875rem;
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
+  --text-micro: 0.6875rem;
+
+  /* Spacing Scale (8pt grid) */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.25rem;  /* 20px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-10: 2.5rem;  /* 40px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+  --space-20: 5rem;    /* 80px */
+  --space-24: 6rem;    /* 96px */
+  --space-32: 8rem;    /* 128px */
+
+  /* Component Geometry (Airbnb softness + Apple precision) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 24px;
+  --radius-pill: 9999px;
+
+  /* Shadows (Subtle, diffused, zero harshness) */
+  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  --shadow-elevated: 0 12px 32px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  --shadow-code-window: 0 20px 48px -12px rgba(17, 24, 39, 0.09), 0 1px 3px rgba(17, 24, 39, 0.05);
+  --shadow-modal: 0 24px 64px -12px rgba(0, 0, 0, 0.18), 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+
+  /* Layout Containers */
+  --container-width: 1280px;
+  --container-wide: 1400px;
+  --container-narrow: 840px;
+
+  /* Transitions (Snappy, physical, zero bounce) */
+  --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 700ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Navbar height */
+  --nav-height: 72px;
+  --nav-height-scrolled: 64px;
+}

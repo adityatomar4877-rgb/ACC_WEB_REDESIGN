@@ -1,0 +1,98 @@
+/* ============================================================
+   EVENTS PAGE LAYOUT
+   ============================================================ */
+
+.eventsPage {
+  background-color: var(--canvas-primary);
+  min-height: 100vh;
+}
+
+/* ---- Hero ---- */
+.hero {
+  padding: 56px 0 32px;
+  background: linear-gradient(180deg, var(--canvas-secondary) 0%, var(--canvas-primary) 100%);
+  border-bottom: 1px solid var(--hairline-ultra-light);
+}
+
+.sectionMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  background: rgba(91, 61, 245, 0.08);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(91, 61, 245, 0.2);
+}
+
+.heroTitle {
+  font-size: clamp(2.4rem, 4.5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--ink-heading, #0F172A);
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  margin: 0 0 14px;
+  max-width: 860px;
+}
+
+.heroLead {
+  font-size: clamp(1.05rem, 1.25vw, 1.1875rem);
+  color: var(--ink-secondary, #475569);
+  line-height: 1.65;
+  max-width: 700px;
+  margin: 0;
+}
+
+/* ---- Deck Section ---- */
+.deckSection {
+  padding: 32px 0 80px;
+  background: var(--canvas-primary);
+}
+
+.deckInfoBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.deckCount {
+  font-size: 0.875rem;
+  color: var(--ink-secondary);
+}
+
+.deckCount strong {
+  color: var(--ink-heading);
+  font-weight: 700;
+}
+
+.deckHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6875rem;
+  color: var(--accent-primary);
+  background: rgba(91, 61, 245, 0.06);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(91, 61, 245, 0.12);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .hero {
+    padding: 40px 0 24px;
+  }
+  .deckInfoBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

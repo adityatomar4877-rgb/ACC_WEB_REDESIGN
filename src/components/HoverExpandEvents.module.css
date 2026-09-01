@@ -1,0 +1,537 @@
+/* ============================================================
+   HOVER EXPAND EVENTS - ULTRA SMOOTH LIGHT THEME CARD DECK
+   ============================================================ */
+
+.deckStack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+/* ---- Individual Card (Hardware Accelerated) ---- */
+.card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  background: #FFFFFF;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  transform: translateZ(0);
+  will-change: height, box-shadow, border-color;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  border-color: rgba(91, 61, 245, 0.35);
+  box-shadow: 0 10px 30px -4px rgba(91, 61, 245, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.cardExpanded {
+  border-color: rgba(91, 61, 245, 0.45) !important;
+  box-shadow: 0 20px 44px -8px rgba(91, 61, 245, 0.12), 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Ambient Subtle Glow in Expanded Mode */
+.ambientGlow {
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  opacity: 0.16;
+  z-index: 0;
+  transform: translateZ(0);
+}
+
+/* ---- COLLAPSED STRIP ---- */
+.collapsedStrip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  gap: 20px;
+  background: #FFFFFF;
+}
+
+.stripLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.stripIndex {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  min-width: 32px;
+}
+
+.stripDatePill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  background: #F8FAFC;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  font-family: var(--font-mono, monospace);
+}
+
+.stripMonth {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #64748B;
+  letter-spacing: 0.04em;
+}
+
+.stripDay {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.stripTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+
+.stripCenter {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.stripSubtitle {
+  font-size: 0.84375rem;
+  color: #64748B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.stripRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.stripCatPill {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stripFormat {
+  font-size: 0.78125rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.stripExpand {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #94A3B8;
+  transition: all 0.2s ease;
+}
+
+.card:hover .stripExpand {
+  color: var(--accent-primary, #5B3DF5);
+  transform: translateX(3px);
+}
+
+/* ---- EXPANDED VIEW ---- */
+.expandedView {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 36px;
+  gap: 16px;
+  background: #FFFFFF;
+}
+
+/* Top badges row */
+.expTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.expBadges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.expCodePill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+
+.expCatBadge {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #1E293B;
+  background: #F1F5F9;
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.expFormatBadge {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #475569;
+  background: #F8FAFC;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.expPrizeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #B45309;
+  background: #FEF3C7;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.expStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #059669;
+  background: #ECFDF5;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Middle Split Grid: Left Details + Right Featured Poster */
+.expMiddleGrid {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 36px;
+  align-items: center;
+  flex: 1;
+}
+
+.expHeadlineGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.expTitle {
+  font-size: clamp(1.85rem, 3.2vw, 2.35rem);
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  margin: 0;
+}
+
+.expSubtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.expDesc {
+  font-size: 0.90625rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 2px 0 0;
+  max-width: 640px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.expTagsRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.expTagPill {
+  padding: 3px 9px;
+  background: #F8FAFC;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-family: var(--font-mono, monospace);
+  color: #64748B;
+  font-weight: 500;
+}
+
+/* Feature Poster Artwork Card */
+.expPosterCard {
+  width: 240px;
+  height: 160px;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  background: #0F172A;
+}
+
+.expPosterCard:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 36px -4px rgba(91, 61, 245, 0.2);
+}
+
+.posterImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.expPosterCard:hover .posterImg {
+  transform: scale(1.06);
+}
+
+.posterOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.75) 100%);
+}
+
+.posterBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.625rem;
+  font-weight: 800;
+  background: #FFFFFF;
+  color: #0F172A;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.posterInfo {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  right: 12px;
+}
+
+.posterCode {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #93C5FD;
+  display: block;
+}
+
+.posterTitle {
+  font-size: 0.84375rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* Bottom row */
+.expBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.expMetaList {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.expMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.expActionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btnDetails {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: #F8FAFC;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  color: #1E293B;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btnDetails:hover {
+  background: #F1F5F9;
+  border-color: var(--accent-primary, #5B3DF5);
+  color: var(--accent-primary, #5B3DF5);
+  transform: translateY(-1px);
+}
+
+.btnRegister {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 22px;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btnRegister:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 980px) {
+  .collapsedStrip {
+    padding: 0 20px;
+  }
+  .stripCenter {
+    display: none;
+  }
+  .expMiddleGrid {
+    grid-template-columns: 1fr;
+  }
+  .expPosterCard {
+    display: none;
+  }
+  .expandedView {
+    padding: 24px 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .collapsedStrip {
+    padding: 0 16px;
+    gap: 10px;
+  }
+  .stripTitle {
+    font-size: 0.9375rem;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .stripRight {
+    gap: 8px;
+  }
+  .stripFormat,
+  .stripExpand {
+    display: none;
+  }
+  .expandedView {
+    padding: 20px 16px;
+  }
+  .expTitle {
+    font-size: 1.45rem;
+  }
+  .expBottomRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .expActionsGroup {
+    width: 100%;
+  }
+  .btnDetails,
+  .btnRegister {
+    flex: 1;
+    justify-content: center;
+  }
+}

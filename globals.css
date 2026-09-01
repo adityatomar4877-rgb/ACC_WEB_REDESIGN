@@ -1,0 +1,811 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn bridge tokens, retuned to the light-primary palette */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 40 33% 94%;
+    --card-foreground: 260 6% 9%;
+    --popover: 40 33% 94%;
+    --popover-foreground: 260 6% 9%;
+    --primary: 46 100% 50%;
+    --primary-foreground: 40 33% 96%;
+    --secondary: 38 20% 84%;
+    --secondary-foreground: 260 6% 9%;
+    --muted: 38 20% 84%;
+    --muted-foreground: 45 4% 45%;
+    --accent: 38 20% 84%;
+    --accent-foreground: 260 6% 9%;
+    --destructive: 6 54% 43%;
+    --destructive-foreground: 40 33% 96%;
+    --border: 0 0% 15%;
+    --input: 38 18% 78%;
+    --ring: 46 100% 50%;
+    --radius: 0.125rem;
+
+    /* experience tokens */
+    --nav-h: 4.75rem;
+    --edge: clamp(1.25rem, 4.5vw, 4.5rem);
+    /* Vertical safe area under the fixed nav, used by every full-height section. */
+    --nav-safe: calc(var(--nav-h) + clamp(0.75rem, 2vh, 1.75rem));
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Lenis owns scrolling; never let the browser fight it. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: var(--font-body), Inter, system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* While the preloader is up, nothing behind it may scroll. */
+  body[data-loading='true'] {
+    overflow: hidden;
+  }
+
+  body[data-cursor='on'],
+  body[data-cursor='on'] * {
+    cursor: none !important;
+  }
+
+  ::selection {
+    background: #ffc400;
+    color: #000000;
+  }
+
+  :focus-visible {
+    outline: 2px solid #ffc400;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display), Archivo, sans-serif;
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .edge {
+    padding-left: var(--edge);
+    padding-right: var(--edge);
+  }
+
+  /* Full-height sections that must clear the fixed navigation. */
+  .nav-safe {
+    padding-top: var(--nav-safe);
+  }
+
+  .label {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /**
+   * Section grounds.
+   *
+   * Two only: black, and the signal yellow used sparingly as a full-bleed
+   * inversion. There is no third tone and no gradient between them — the
+   * reference gets its force from an abrupt cut between pure black and pure
+   * yellow, and any intermediate wash would soften exactly the thing that
+   * makes it work.
+   *
+   * Black grounds are transparent so the fixed 3D layer reads through them;
+   * the body supplies the black underneath.
+   */
+  .ground-void {
+    background-color: transparent;
+  }
+
+  /* Full-bleed inversion. Opaque, and deliberately rare. */
+  .ground-signal {
+    background-color: #ffc400;
+    color: #000000;
+  }
+  .ground-signal * {
+    border-color: rgba(0, 0, 0, 0.18);
+  }
+
+  /*
+   * The deck's one full-bleed slide.
+   *
+   * White type on the accent rather than black type on it: at this saturation
+   * the red is dark enough to carry white, and white keeps the slide reading as
+   * the same voice as the eight black ones before it rather than as a sudden
+   * inversion.
+   */
+  .ground-flare {
+    background-color: #bd0a0a;
+    color: #ffffff;
+  }
+  .ground-flare * {
+    border-color: rgba(255, 255, 255, 0.24);
+  }
+
+  /* Scrim behind the navigation so type never collides with it. */
+  .nav-scrim {
+    background-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.55) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+  .nav-scrim-dark {
+    background-image: linear-gradient(
+      180deg,
+      rgba(13, 15, 18, 0.94) 0%,
+      rgba(13, 15, 18, 0.66) 45%,
+      rgba(13, 15, 18, 0) 100%
+    );
+  }
+
+  /* Very fine paper grain — static, never animated. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.28;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  }
+
+  /**
+   * Hairline rules that divide the viewport into panels.
+   *
+   * The reference organises whole screens this way rather than with cards: a
+   * single 1px line at a considered position does the work a border-radius and
+   * a background would otherwise be asked to do.
+   */
+  .rule-v {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .rule-h {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .hairline-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    background-size: 7.5rem 7.5rem;
+  }
+
+  .panel {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+  .panel-dark {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  .split-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+  }
+  .split-child {
+    display: inline-block;
+    will-change: transform, opacity;
+  }
+
+  /**
+   * Overflow-hidden line box that does not clip descenders.
+   * The padding gives the "g" and "y" room; the negative margin takes the space
+   * back out of the layout so line rhythm is unchanged.
+   */
+  .line-mask {
+    overflow: hidden;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+
+  /* Promotion hint, applied narrowly to scrub-driven elements only. */
+  .will-3d {
+    will-change: transform, opacity;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+  }
+
+  /**
+   * The full-screen menu.
+   *
+   * The overlay opens as a circle growing out of the hamburger button. The
+   * radius lives in `--nav-reveal` and the origin in `--nav-ox` / `--nav-oy`,
+   * rather than the whole `clip-path` being tweened as a string: the origin is
+   * measured from the button and must stay fixed while only the radius moves,
+   * and a registered length is something the browser can interpolate natively.
+   *
+   * The origin is measured rather than hard-coded to a corner. The reference
+   * recipe says `at top right`, which assumes the button is in the corner —
+   * ours sits at the right-hand end of a centred capsule, so the circle is
+   * anchored to wherever the button actually is. Growing from a corner the
+   * button is not in reads as a different, unrelated animation.
+   */
+  .nav-menu {
+    --nav-reveal: 0px;
+    --nav-ox: 100%;
+    --nav-oy: 0%;
+    clip-path: circle(var(--nav-reveal) at var(--nav-ox) var(--nav-oy));
+    will-change: clip-path;
+    /* The resting state, in CSS rather than in a React style prop. See below. */
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /*
+   * The header's pre-entrance position.
+   *
+   * These live here, not in a `style` prop, and the distinction is not cosmetic.
+   * React owns the whole style attribute of any element it is given a `style`
+   * prop for, so it rewrites it on every render — which would reset whatever
+   * GSAP had animated the moment any unrelated state changed. The scroll
+   * listener alone was enough to make the header disappear mid-page.
+   *
+   * With no style prop, React never touches the attribute and GSAP's inline
+   * values simply override this class for the life of the element.
+   */
+  .nav-shell {
+    transform: translateY(-100px);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /*
+   * The per-link background previews, stacked and cross-faded.
+   *
+   * Both states are named classes rather than one toggled class, because they
+   * need different timings: arriving is quick and eased out so the preview
+   * feels attached to the pointer, leaving is slower so a reader crossing the
+   * list does not trigger a strobe of half-finished transitions.
+   */
+  .nav-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.06);
+    pointer-events: none;
+    transition:
+      opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-bg.is-bg-enter {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .nav-bg.is-bg-leave {
+    opacity: 0;
+    transform: scale(1.03);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /*
+   * Hover dimming. Applied to the list, so the rule is "everything except the
+   * one being pointed at" rather than a class toggled on every sibling — which
+   * would mean a state write per item on every pointer move across the menu.
+   */
+  .nav-list:hover .nav-item {
+    opacity: 0.4;
+  }
+  .nav-list .nav-item:hover {
+    opacity: 1;
+  }
+  .nav-item {
+    opacity: 1;
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-menu {
+      clip-path: none;
+    }
+  }
+
+  /**
+   * The marquee band.
+   *
+   * A white ribbon on a grained red ground, tilted a few degrees, with heavy
+   * uppercase type scrolling through it forever. Streetwear signage, and it
+   * works here for the same reason it works there: it is loud, it is one idea,
+   * and it reads at a glance from the back of a room.
+   *
+   * Three things are load-bearing:
+   *
+   *   - The loop is one duplicated track translated by exactly -50%. At the end
+   *     of the cycle the second copy sits precisely where the first began, so
+   *     the reset is invisible. Any other distance leaves a visible jump.
+   *   - The band's vertical padding is derived from the tilt, not guessed. A
+   *     ribbon of width W rotated by θ lifts its corners by (W/2)·sin θ, so at
+   *     120% width and 3.5° that is 3.7vw — less padding and the corners get
+   *     clipped into points; much more and the red band bloats.
+   *   - Only `transform` animates. A marquee runs for as long as the page is
+   *     open, so anything that touches layout would cost a reflow every frame
+   *     of an animation that never ends.
+   */
+  .marquee-band {
+    --marquee-angle: -3.5deg;
+    --marquee-duration: 26s;
+    /* sin(3.5deg) x half of the 120% ribbon width — the corner lift. */
+    --marquee-lift: 3.7vw;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-block: var(--marquee-lift);
+    background-color: #c40d12;
+    /* Contains the grain's blend mode so it cannot reach the page behind. */
+    isolation: isolate;
+  }
+
+  /*
+   * Grain. An inline feTurbulence rather than an image: it costs no request,
+   * cannot 404, and tiles at any size. `overlay` keeps the red's hue and moves
+   * only its luminance, which is what stops the texture reading as grey dust
+   * sitting on top of the colour.
+   */
+  .marquee-band::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.24;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  .marquee-ribbon {
+    position: relative;
+    z-index: 1;
+    /* Wider than the viewport so the tilted ends never expose the red. */
+    width: 120%;
+    margin-left: -10%;
+    overflow: hidden;
+    background: #ffffff;
+    transform: rotate(var(--marquee-angle));
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    animation: marquee-scroll var(--marquee-duration) linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  /* Held still on hover, so a phrase can actually be read. */
+  .marquee-band:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  /*
+   * Solid black is the base, and the outline is layered on only where the
+   * browser can actually draw it. Setting `color: transparent` unconditionally
+   * would render the outlined items invisible anywhere the stroke is not
+   * supported — a failure that is silent and total.
+   */
+  .marquee-outline {
+    color: #000000;
+  }
+
+  @supports (-webkit-text-stroke: 2px #000000) {
+    .marquee-outline {
+      color: transparent;
+      -webkit-text-stroke: 2px #000000;
+    }
+  }
+
+  .marquee-solid {
+    color: #000000;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+
+  /**
+   * Scroll-revealed text.
+   *
+   * Every word is on the page from the start, sitting in a near-black that is
+   * legible as shape but not as reading, and wipes to white left-to-right as
+   * the reader arrives at it. The type is never absent and never fades in from
+   * nothing — it is already there, and the reader's progress is what turns it
+   * on. That is measurably what the reference does: each unit carries a
+   * two-stop gradient clipped to the glyphs, and the stop position is animated
+   * from 0% to 100%.
+   *
+   * `@property` is what makes this cheap. Registering `--wipe` as a percentage
+   * lets the browser interpolate it natively and keeps the gradient on the
+   * compositor instead of re-parsing a string every frame. Browsers without it
+   * still work — the value simply steps rather than glides, and a scrubbed
+   * animation updates often enough that the difference is invisible.
+   */
+  .wipe-unit {
+    /* Defaults, so a unit renders correctly even with no tone set on it. */
+    --wipe: 0%;
+    --wipe-on: #ffffff;
+    --wipe-off: #252525;
+    background-image: linear-gradient(
+      90deg,
+      var(--wipe-on) 0%,
+      var(--wipe-on) var(--wipe),
+      var(--wipe-off) var(--wipe),
+      var(--wipe-off) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Descenders are clipped by the background box without this. */
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+
+  /*
+   * A word must not break across lines, or the gradient — which is painted per
+   * element — restarts mid-word and the wipe reads as a glitch.
+   */
+  .wipe-word {
+    display: inline-block;
+    white-space: pre;
+  }
+
+  /*
+   * Reduced motion, and the no-JavaScript case: fully revealed. A reader who
+   * never triggers the scrub must not be left looking at near-black text on
+   * black, which is the one failure mode of this whole technique.
+   */
+  /* Fully revealed: set by the component whenever no scrub will ever run. */
+  .wipe-static .wipe-unit,
+  .wipe-unit.wipe-static {
+    --wipe: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wipe-unit {
+      --wipe: 100%;
+    }
+  }
+
+  /**
+   * The cover that contracts back into the link you clicked to leave.
+   *
+   * Inert and unpainted unless a transition is running — an unconditional
+   * full-viewport element would sit over the deck for the rest of the session,
+   * and `pointer-events: none` only conceals that until something needs to
+   * hit-test through it.
+   *
+   * Above everything, including the preloader, because for the length of the
+   * animation it *is* the page.
+   */
+  .route-minimize {
+    display: none;
+  }
+
+  .route-minimize[data-minimizing] {
+    --route-reveal: 0px;
+    --route-ox: 50%;
+    --route-oy: 0%;
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 130;
+    pointer-events: none;
+    background: #000000;
+    clip-path: circle(var(--route-reveal) at var(--route-ox) var(--route-oy));
+    will-change: clip-path;
+  }
+
+  /**
+   * The console maximising in.
+   *
+   * The clip is attached to a data attribute rather than to the class, and the
+   * attribute is removed the instant the animation ends. `clip-path` clips
+   * fixed-position descendants, and the console has two — the mobile navigation
+   * bar and the notifications panel — so a rule left applied at 100% would look
+   * finished and quietly break both.
+   */
+  .console-maximize[data-maximizing] {
+    --console-reveal: 0px;
+    --console-ox: 50%;
+    --console-oy: 0%;
+    clip-path: circle(var(--console-reveal) at var(--console-ox) var(--console-oy));
+    will-change: clip-path, transform;
+  }
+
+  /**
+   * The console.
+   *
+   * The operational side of the product, built to the shape of a working
+   * dashboard: a fixed sidebar, a scrolling middle column, and a right rail of
+   * standing context. That shape is taken from the reference; the surface
+   * treatment is not, and could not be — the reference lifts white cards off a
+   * grey page with soft shadows, and a shadow is invisible on black.
+   *
+   * So the lift is carried by three things instead: a card ground one step off
+   * pure black, a hairline border, and a one-pixel inner highlight along the
+   * top edge that reads as a light source. Hover brightens the border rather
+   * than deepening a shadow. The result sits at the same visual weight as the
+   * reference without pretending the palette is something it isn't.
+   *
+   * `--nav-h: 0px` is the important line. The floating capsule does not appear
+   * over the console — the sidebar is the navigation here — so every component
+   * that reserves space under it (PageHeader, .nav-safe, full-height sections)
+   * collapses that reservation automatically rather than needing a variant.
+   */
+  .console-shell {
+    --nav-h: 0px;
+    --card: #0a0a0a;
+    --card-hover: #101010;
+    --hair: rgba(255, 255, 255, 0.08);
+    --hair-strong: rgba(255, 255, 255, 0.16);
+    --lift: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hair);
+    border-radius: 14px;
+    box-shadow: var(--lift);
+  }
+
+  /* Cards that are buttons or links. Static cards must not claim to be. */
+  .card-interactive {
+    cursor: pointer;
+    transition:
+      border-color 180ms ease,
+      background 180ms ease,
+      transform 180ms ease;
+  }
+  .card-interactive:hover {
+    border-color: var(--hair-strong);
+    background: var(--card-hover);
+    transform: translateY(-2px);
+  }
+
+  /* Pastel tint roles, rebuilt as low-alpha washes of our own five hues. */
+  .tint-signal {
+    background: rgba(217, 0, 0, 0.12);
+    color: #D90000;
+  }
+  .tint-validated {
+    background: rgba(111, 207, 151, 0.12);
+    color: #6fcf97;
+  }
+  .tint-risk {
+    background: rgba(255, 107, 90, 0.12);
+    color: #ff6b5a;
+  }
+  .tint-chalk {
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /*
+   * Pages that predate the console keep their own markup.
+   *
+   * They were written as full-width routes and carry a page gutter and a top
+   * reservation for the floating capsule. Inside the console column both are
+   * already supplied, so they are removed here rather than every page being
+   * rewritten — one rule, and no route left half-converted.
+   */
+  .console-shell .edge {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .console-shell header.edge {
+    padding-top: 0;
+    padding-bottom: 1rem;
+  }
+
+  /* The console scrolls two of its three columns independently. */
+  .console-scroll {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+  }
+  .console-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  .console-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 99px;
+  }
+  .console-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /**
+   * The horizontal deck.
+   *
+   * The landing page is a slideshow read sideways: vertical scroll is pinned
+   * and converted into horizontal travel across a row of full-viewport slides.
+   *
+   * The layout switch lives here rather than in JavaScript so it cannot drift
+   * out of step with the matchMedia query that installs the pin. Both are
+   * keyed on exactly the same condition — wide enough for a sideways read, and
+   * the reader has not asked for reduced motion. Anywhere else the same slides
+   * stack vertically and behave like an ordinary page, which is also the
+   * server-rendered state, so nothing depends on JavaScript to be legible.
+   */
+  .deck-shell {
+    position: relative;
+    width: 100%;
+  }
+
+  .deck-track {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .deck-slide {
+    position: relative;
+    width: 100%;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /*
+   * Progress rail. Meaningless when the deck is stacked, so it is not drawn.
+   *
+   * Its ink is a variable because the rail is fixed while the slides travel
+   * underneath it — over the one full-bleed accent slide the white hairlines
+   * would disappear, so the deck flips `data-tone` as that slide arrives.
+   */
+  .deck-rail {
+    /*
+     * No `!important` here: the media query below is what turns the rail on,
+     * and an important declaration would win against it and leave the deck with
+     * no progress indicator at all.
+     */
+    display: none;
+    --rail-ink: rgba(255, 255, 255, 0.38);
+    --rail-line: rgba(255, 255, 255, 0.12);
+    --rail-fill: #bd0a0a;
+    color: var(--rail-ink);
+    transition: color 0.4s ease;
+  }
+
+  .deck-rail[data-tone='invert'] {
+    --rail-ink: rgba(255, 255, 255, 0.6);
+    --rail-line: rgba(255, 255, 255, 0.24);
+    --rail-fill: #ffffff;
+  }
+
+  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    .deck-shell {
+      height: 100svh;
+      overflow: hidden;
+    }
+
+    .deck-track {
+      flex-direction: row;
+      height: 100svh;
+      width: max-content;
+      /* Promoted once, up front: the track is translated every scroll frame. */
+      will-change: transform;
+    }
+
+    .deck-slide {
+      /* No shrink, no grow — every slide is exactly one viewport wide. */
+      flex: 0 0 100vw;
+      width: 100vw;
+      height: 100svh;
+      min-height: 0;
+    }
+
+    .deck-rail {
+      display: block;
+    }
+  }
+
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+  }
+}
+
+/**
+ * The wipe position, registered so the browser can interpolate it.
+ *
+ * An unregistered custom property is a string to the animation engine, so a
+ * tween on it steps rather than glides. Registered as a percentage it animates
+ * natively — which matters here because a slide can carry a few hundred units.
+ */
+/** The menu circle's radius. Registered so the browser interpolates it. */
+@property --nav-reveal {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --wipe {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+/* Gloss sweep across the navigation capsule. Transform only. */
+@keyframes markGloss {
+  0%   { transform: translateX(0%); opacity: 0; }
+  12%  { opacity: 0.55; }
+  40%  { transform: translateX(520%); opacity: 0; }
+  100% { transform: translateX(520%); opacity: 0; }
+}
+
+/* Reduced motion: keep the story, drop the choreography. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.12s !important;
+  }
+  .split-child {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
