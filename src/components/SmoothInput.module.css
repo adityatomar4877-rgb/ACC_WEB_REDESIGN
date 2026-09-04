@@ -1,0 +1,69 @@
+/* SmoothInput CSS Module - Sleek, no inner lining, perfectly proportioned smooth caret */
+
+.wrapper {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0;
+  background: transparent;
+}
+
+.inputField {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  width: 100%;
+  height: 100%;
+  outline: none !important;
+  caret-color: transparent !important; /* Hides browser default harsh caret */
+  box-sizing: border-box;
+}
+
+.inputField:focus,
+.inputField:focus-visible,
+.inputField:active {
+  outline: none !important;
+}
+
+/* Ensure placeholder is styled consistently */
+.inputField::placeholder {
+  color: var(--ink-muted, rgba(148, 163, 184, 0.65));
+}
+
+.measureSpan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: pre;
+  user-select: none;
+  box-sizing: content-box;
+}
+
+/* Smooth Caret: Sized cleanly to 0.95em (matching capital letters), vertically centered */
+.caret {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  position: relative;
+  justify-self: start;
+  align-self: center;
+  width: 2px;
+  height: 0.95em;
+  border-radius: 1px;
+  background-color: var(--accent-primary, #5B3DF5);
+  pointer-events: none;
+  z-index: 10;
+  will-change: transform, opacity;
+}
+
+/* Dark mode caret */
+:global([data-theme="dark"]) .caret,
+:global(html.dark) .caret {
+  background-color: #8B5CF6;
+}

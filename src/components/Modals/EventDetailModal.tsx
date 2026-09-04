@@ -941,6 +941,106 @@ export default function EventDetailModal({
               box-shadow: 0 6px 16px rgba(0, 102, 204, 0.35);
             }
 
+            :global([data-theme="dark"]) .modal-card,
+            :global(html.dark) .modal-card {
+              background: #111522 !important;
+              border-color: rgba(255, 255, 255, 0.1) !important;
+              color: #F3F4F6 !important;
+            }
+
+            :global([data-theme="dark"]) .quick-details-strip,
+            :global(html.dark) .quick-details-strip {
+              background: #0F131D !important;
+              border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+            }
+
+            :global([data-theme="dark"]) .detail-value,
+            :global(html.dark) .detail-value {
+              color: #F8FAFC !important;
+            }
+
+            :global([data-theme="dark"]) .modal-nav-tabs,
+            :global(html.dark) .modal-nav-tabs {
+              background: #111522 !important;
+              border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+            }
+
+            :global([data-theme="dark"]) .tab-btn,
+            :global(html.dark) .tab-btn {
+              color: #94A3B8 !important;
+            }
+
+            :global([data-theme="dark"]) .tab-btn.active,
+            :global(html.dark) .tab-btn.active {
+              color: #A78BFA !important;
+            }
+
+            :global([data-theme="dark"]) .modal-body-content,
+            :global(html.dark) .modal-body-content {
+              background: #111522 !important;
+            }
+
+            :global([data-theme="dark"]) .section-title,
+            :global(html.dark) .section-title {
+              color: #FFFFFF !important;
+            }
+
+            :global([data-theme="dark"]) .overview-desc,
+            :global(html.dark) .overview-desc {
+              color: #94A3B8 !important;
+            }
+
+            :global([data-theme="dark"]) .highlight-card,
+            :global(html.dark) .highlight-card {
+              background: #181F30 !important;
+              border-color: rgba(255, 255, 255, 0.08) !important;
+            }
+
+            :global([data-theme="dark"]) .highlight-title,
+            :global(html.dark) .highlight-title {
+              color: #FFFFFF !important;
+            }
+
+            :global([data-theme="dark"]) .highlight-desc,
+            :global(html.dark) .highlight-desc {
+              color: #94A3B8 !important;
+            }
+
+            :global([data-theme="dark"]) .speaker-card,
+            :global(html.dark) .speaker-card {
+              background: #181F30 !important;
+              border-color: rgba(255, 255, 255, 0.08) !important;
+            }
+
+            :global([data-theme="dark"]) .speaker-name,
+            :global(html.dark) .speaker-name {
+              color: #FFFFFF !important;
+            }
+
+            :global([data-theme="dark"]) .agenda-item,
+            :global(html.dark) .agenda-item {
+              background: #181F30 !important;
+              border-color: rgba(255, 255, 255, 0.08) !important;
+            }
+
+            :global([data-theme="dark"]) .agenda-title,
+            :global(html.dark) .agenda-title {
+              color: #FFFFFF !important;
+            }
+
+            :global([data-theme="dark"]) .modal-footer,
+            :global(html.dark) .modal-footer {
+              background: #0F131D !important;
+              border-top-color: rgba(255, 255, 255, 0.08) !important;
+            }
+
+            :global([data-theme="dark"]) .footer-btn-secondary,
+            :global(html.dark) .footer-btn-secondary {
+              background: #181F30 !important;
+              border-color: rgba(255, 255, 255, 0.1) !important;
+              color: #F8FAFC !important;
+            }
+
             @media (max-width: 768px) {
               .quick-details-strip {
                 grid-template-columns: 1fr 1fr;

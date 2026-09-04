@@ -168,23 +168,23 @@ function makeImpact() {
           width: 9px;
           height: 9px;
           border: 1px solid var(--accent-primary);
-          background-color: #FFFFFF;
+          background-color: var(--canvas-primary);
           border-radius: 2px;
           pointer-events: none;
         }
 
         /* Code Window */
         .code-window {
-          background-color: #FFFFFF;
+          background-color: var(--canvas-card);
           border: 1px solid var(--hairline);
           border-radius: 16px;
-          box-shadow: 0 20px 48px -12px rgba(17, 24, 39, 0.08), 0 2px 6px rgba(17, 24, 39, 0.03);
+          box-shadow: var(--shadow-card);
           overflow: hidden;
           transition: transform var(--transition-base), box-shadow var(--transition-base);
         }
 
         .code-window:hover {
-          box-shadow: 0 28px 60px -12px rgba(17, 24, 39, 0.12), 0 4px 12px rgba(17, 24, 39, 0.04);
+          box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .window-header {
@@ -192,7 +192,7 @@ function makeImpact() {
           align-items: center;
           justify-content: space-between;
           padding: 14px 18px;
-          background-color: #FFFFFF;
+          background-color: var(--canvas-card);
           border-bottom: 1px solid var(--hairline-ultra-light);
         }
 
@@ -244,7 +244,7 @@ function makeImpact() {
 
         .code-body {
           padding: 16px 20px 20px;
-          background-color: #FFFFFF;
+          background-color: var(--canvas-card);
           overflow-x: auto;
         }
 
@@ -265,14 +265,14 @@ function makeImpact() {
         }
 
         .code-line.highlighted {
-          background-color: rgba(0, 102, 204, 0.04);
+          background-color: rgba(91, 61, 245, 0.08);
         }
 
         .line-num {
           user-select: none;
           width: 32px;
           flex-shrink: 0;
-          color: #9CA3AF;
+          color: var(--ink-muted);
           font-size: 0.75rem;
           font-weight: 400;
         }
@@ -289,12 +289,12 @@ function makeImpact() {
 
         /* Restrained Syntax Highlighting */
         :global(.kw) { color: #8B5CF6; font-weight: 500; }
-        :global(.var) { color: #1E293B; }
-        :global(.prop) { color: #475569; }
+        :global(.var) { color: var(--ink-primary); }
+        :global(.prop) { color: var(--ink-secondary); }
         :global(.num) { color: #0284C7; font-weight: 500; }
         :global(.str) { color: #10B981; }
         :global(.fn) { color: #0066CC; font-weight: 500; }
-        :global(.arg) { color: #64748B; font-style: italic; }
+        :global(.arg) { color: var(--ink-muted); font-style: italic; }
 
         @media (max-width: 1024px) {
           .code-editor-container {

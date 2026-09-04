@@ -339,11 +339,11 @@ export default function AboutPage() {
 
         /* Philosophy Doctrine Card */
         .philosophy-doctrine-card {
-          background: #FFFFFF;
-          border: 1px solid rgba(226, 232, 240, 0.9);
+          background: var(--card-bg, #FFFFFF);
+          border: 1px solid var(--card-border, rgba(226, 232, 240, 0.9));
           border-radius: 20px;
           padding: 28px 26px;
-          box-shadow: 0 10px 30px -4px rgba(91, 61, 245, 0.08);
+          box-shadow: var(--shadow-card, 0 10px 30px -4px rgba(91, 61, 245, 0.08));
           display: flex;
           flex-direction: column;
           gap: 12px;
@@ -354,7 +354,7 @@ export default function AboutPage() {
           font-size: 0.6875rem;
           font-weight: 800;
           color: #5B3DF5;
-          background: #EEF0FF;
+          background: var(--canvas-subtle, #EEF0FF);
           padding: 3px 8px;
           border-radius: 4px;
           align-self: flex-start;
@@ -364,7 +364,7 @@ export default function AboutPage() {
         .doctrine-lead {
           font-size: 1.5rem;
           font-weight: 800;
-          color: #0F172A;
+          color: var(--ink-heading, #0F172A);
           letter-spacing: -0.02em;
           margin: 0;
         }
@@ -386,11 +386,11 @@ export default function AboutPage() {
           font-family: var(--font-mono, monospace);
           font-size: 0.9375rem;
           font-weight: 800;
-          color: #DC2626;
-          background: #FEF2F2;
+          color: #EF4444;
+          background: rgba(239, 68, 68, 0.1);
           padding: 4px 12px;
           border-radius: 6px;
-          border: 1px solid rgba(220, 38, 38, 0.2);
+          border: 1px solid rgba(239, 68, 68, 0.25);
           letter-spacing: 0.02em;
         }
 
@@ -445,10 +445,11 @@ export default function AboutPage() {
           display: grid;
           grid-template-columns: 140px 1fr;
           gap: 32px;
-          background: #FFFFFF;
-          border: 1px solid var(--hairline);
+          background: var(--card-bg, #FFFFFF);
+          border: 1px solid var(--card-border, var(--hairline));
           border-radius: 16px;
           padding: 24px 28px;
+          box-shadow: var(--shadow-subtle);
           transition: border-color 0.2s ease, transform 0.2s ease;
         }
 
@@ -503,12 +504,13 @@ export default function AboutPage() {
         }
 
         .value-card {
-          background: #FFFFFF;
-          border: 1px solid var(--hairline);
+          background: var(--card-bg, #FFFFFF);
+          border: 1px solid var(--card-border, var(--hairline));
           border-radius: 18px;
           padding: 28px 24px;
           display: flex;
           flex-direction: column;
+          box-shadow: var(--shadow-subtle);
         }
 
         .val-num {

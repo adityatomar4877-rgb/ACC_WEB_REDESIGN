@@ -462,14 +462,14 @@ export default function TechStackGrid() {
         }
 
         .tech-row-item:hover {
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border-color: rgba(91, 61, 245, 0.2);
-          box-shadow: 0 4px 12px rgba(91, 61, 245, 0.06);
+          box-shadow: var(--shadow-subtle);
           transform: translateX(3px);
         }
 
         .tech-row-item.selected {
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border-color: var(--accent-primary);
           box-shadow: 0 4px 16px rgba(91, 61, 245, 0.12);
         }

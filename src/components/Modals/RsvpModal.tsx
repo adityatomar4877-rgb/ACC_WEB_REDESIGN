@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { EventItem } from '@/data/events';
-import confetti from 'canvas-confetti';
+import { triggerConfetti } from '@/lib/confetti';
+import SmoothInput from '@/components/SmoothInput';
 
 interface RsvpModalProps {
   event: EventItem | null;
@@ -29,15 +30,11 @@ export default function RsvpModal({ event, isOpen, onClose }: RsvpModalProps) {
     setConfirmed(true);
 
     // Fire subtle celebration confetti
-    try {
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
-    } catch {
-      // ignore
-    }
+    triggerConfetti({
+      particleCount: 50,
+      spread: 60,
+      origin: { y: 0.6 }
+    });
   };
 
   const handleReset = () => {
@@ -76,7 +73,7 @@ export default function RsvpModal({ event, isOpen, onClose }: RsvpModalProps) {
 
             <div className="form-group">
               <label className="form-label" htmlFor="rsvp-name">Full Name *</label>
-              <input
+              <SmoothInput
                 id="rsvp-name"
                 type="text"
                 className="form-input"
@@ -89,7 +86,7 @@ export default function RsvpModal({ event, isOpen, onClose }: RsvpModalProps) {
 
             <div className="form-group">
               <label className="form-label" htmlFor="rsvp-email">University / Personal Email *</label>
-              <input
+              <SmoothInput
                 id="rsvp-email"
                 type="email"
                 className="form-input"
@@ -103,7 +100,7 @@ export default function RsvpModal({ event, isOpen, onClose }: RsvpModalProps) {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="rsvp-enroll">Student ID / Enrollment</label>
-                <input
+                <SmoothInput
                   id="rsvp-enroll"
                   type="text"
                   className="form-input"
@@ -231,15 +228,16 @@ export default function RsvpModal({ event, isOpen, onClose }: RsvpModalProps) {
         }
 
         .modal-box {
-          background: #FFFFFF;
+          background: var(--card-bg, #FFFFFF);
           border-radius: 20px;
-          border: 1px solid var(--hairline);
-          box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.18);
+          border: 1px solid var(--card-border, var(--hairline));
+          box-shadow: var(--shadow-modal, 0 24px 64px -12px rgba(0, 0, 0, 0.18));
           width: 100%;
           max-width: 580px;
           max-height: 90vh;
           overflow-y: auto;
           padding: 32px;
+          color: var(--ink-primary);
           animation: modal-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -338,10 +336,10 @@ export default function RsvpModal({ event, isOpen, onClose }: RsvpModalProps) {
         .form-input {
           width: 100%;
           padding: 10px 14px;
-          border: 1px solid var(--hairline);
+          border: 1px solid var(--hairline-medium, var(--hairline));
           border-radius: 8px;
-          background: #FFFFFF;
-          color: var(--ink-primary);
+          background: var(--canvas-input, #FFFFFF);
+          color: var(--ink-heading, var(--ink-primary));
           font-size: 0.875rem;
           transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
         }

@@ -29,27 +29,24 @@ function Word({
   range,
   progress,
   baseOpacity,
-  enableBlur,
-  baseRotation,
-  blurStrength
-}: WordProps) {
+  yDistance = 6
+}: {
+  word: string;
+  range: [number, number];
+  progress: any;
+  baseOpacity: number;
+  yDistance?: number;
+}) {
   const opacity = useTransform(progress, range, [baseOpacity, 1], { clamp: true });
-  const blur = useTransform(progress, range, [blurStrength, 0], { clamp: true });
-  const rotate = useTransform(progress, range, [baseRotation, 0], { clamp: true });
-  const y = useTransform(progress, range, [5, 0], { clamp: true });
-
-  const filter = useTransform(blur, (val) => (enableBlur ? `blur(${val}px)` : 'none'));
+  const y = useTransform(progress, range, [yDistance, 0], { clamp: true });
 
   return (
     <motion.span
       className="scroll-reveal-word"
       style={{
         opacity,
-        filter,
-        rotate,
         y,
         display: 'inline-block',
-        willChange: 'opacity, filter, transform',
         marginRight: '0.26em',
         marginBottom: '0.12em'
       }}
@@ -61,10 +58,8 @@ function Word({
 
 export default function ScrollReveal({
   children,
-  baseOpacity = 0.08,
-  enableBlur = true,
-  baseRotation = 1.5,
-  blurStrength = 6,
+  baseOpacity = 0.12,
+  enableBlur = false,
   containerClassName = '',
   textClassName = '',
   className = ''
@@ -77,12 +72,12 @@ export default function ScrollReveal({
     offset: ['start start', 'end end']
   });
 
-  // Apply smooth spring physics to eliminate choppy scroll notches and create an elegant glide
+  // Smooth scroll spring with appropriate restDelta to avoid pinning the CPU
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 70,
-    damping: 26,
-    mass: 0.4,
-    restDelta: 0.0001
+    stiffness: 100,
+    damping: 30,
+    mass: 0.2,
+    restDelta: 0.002
   });
 
   // Extract text and split into words
@@ -114,9 +109,6 @@ export default function ScrollReveal({
                     range={[start, Math.min(end, animEndRatio)]}
                     progress={smoothProgress}
                     baseOpacity={baseOpacity}
-                    enableBlur={enableBlur}
-                    baseRotation={baseRotation}
-                    blurStrength={blurStrength}
                   />
                 );
               })}

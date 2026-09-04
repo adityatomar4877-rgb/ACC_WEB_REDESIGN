@@ -112,10 +112,10 @@ export default function HeroVisual() {
         .ambient-glow {
           position: absolute;
           border-radius: 50%;
-          filter: blur(60px);
+          filter: blur(50px);
           pointer-events: none;
           opacity: 0.55;
-          animation: pulse-ambient 6s ease-in-out infinite alternate;
+          transform: translate3d(0, 0, 0);
         }
 
         .purple-glow {
@@ -132,18 +132,6 @@ export default function HeroVisual() {
           background: radial-gradient(circle, rgba(245, 181, 27, 0.22) 0%, rgba(245, 181, 27, 0.02) 70%, transparent 100%);
           top: 25%;
           right: 8%;
-          animation-delay: -3s;
-        }
-
-        @keyframes pulse-ambient {
-          0% {
-            transform: scale(0.95);
-            opacity: 0.45;
-          }
-          100% {
-            transform: scale(1.1);
-            opacity: 0.65;
-          }
         }
 
         /* Concentric Orbital Rings */
@@ -152,6 +140,8 @@ export default function HeroVisual() {
           border-radius: 50%;
           border: 1px solid rgba(91, 61, 245, 0.1);
           pointer-events: none;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
         }
 
         .ring-outer {
@@ -165,7 +155,6 @@ export default function HeroVisual() {
           height: 360px;
           border-color: rgba(91, 61, 245, 0.08);
           border-style: dashed;
-          border-dasharray: 4 6;
         }
 
         .ring-inner {
@@ -178,9 +167,7 @@ export default function HeroVisual() {
         .floating-badge {
           position: absolute;
           z-index: 10;
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
+          background: rgba(255, 255, 255, 0.95);
           border: 1px solid rgba(229, 231, 235, 0.8);
           border-radius: 12px;
           box-shadow: 0 12px 24px -4px rgba(91, 61, 245, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
@@ -190,11 +177,14 @@ export default function HeroVisual() {
           font-family: var(--font-mono);
           font-weight: 600;
           color: #5B3DF5;
-          transition: transform 0.3s ease;
+          will-change: transform;
+          backface-visibility: hidden;
+          transform: translate3d(0, 0, 0);
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
         }
 
         .floating-badge:hover {
-          transform: scale(1.08) translateY(-2px);
+          transform: scale3d(1.08, 1.08, 1) translate3d(0, -2px, 0) !important;
         }
 
         .badge-top-left {
@@ -203,6 +193,7 @@ export default function HeroVisual() {
           width: 46px;
           height: 46px;
           font-size: 1rem;
+          transform: translate3d(0, 0, 0) rotate(-2deg);
           animation: float-badge-1 5s ease-in-out infinite alternate;
         }
 
@@ -213,17 +204,18 @@ export default function HeroVisual() {
           height: 48px;
           font-size: 1.15rem;
           color: #111827;
+          transform: translate3d(0, 0, 0) rotate(2deg);
           animation: float-badge-2 6s ease-in-out infinite alternate;
         }
 
         @keyframes float-badge-1 {
-          0% { transform: translateY(0px) rotate(-2deg); }
-          100% { transform: translateY(-8px) rotate(2deg); }
+          0% { transform: translate3d(0, 0px, 0) rotate(-2deg); }
+          100% { transform: translate3d(0, -9px, 0) rotate(-2deg); }
         }
 
         @keyframes float-badge-2 {
-          0% { transform: translateY(0px) rotate(2deg); }
-          100% { transform: translateY(-10px) rotate(-2deg); }
+          0% { transform: translate3d(0, 0px, 0) rotate(2deg); }
+          100% { transform: translate3d(0, -10px, 0) rotate(2deg); }
         }
 
         /* Floating Accent Spheres */
@@ -231,6 +223,7 @@ export default function HeroVisual() {
           position: absolute;
           border-radius: 50%;
           pointer-events: none;
+          transform: translate3d(0, 0, 0);
         }
 
         .sphere-purple-1 {
@@ -267,23 +260,26 @@ export default function HeroVisual() {
         }
 
         @keyframes float-sphere {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(4px, -6px); }
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(4px, -6px, 0); }
         }
 
         /* 3D Card Container & Floating Animation */
         .cube-card-container {
           position: relative;
           z-index: 5;
+          will-change: transform;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
           animation: float-main-card 5s ease-in-out infinite alternate;
         }
 
         @keyframes float-main-card {
           0% {
-            transform: translateY(0px);
+            transform: translate3d(0, 0px, 0);
           }
           100% {
-            transform: translateY(-12px);
+            transform: translate3d(0, -12px, 0);
           }
         }
 
@@ -303,11 +299,14 @@ export default function HeroVisual() {
           justify-content: center;
           position: relative;
           overflow: hidden;
+          will-change: transform;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
         }
 
         .cube-card:hover {
-          transform: scale(1.03) translateY(-4px);
+          transform: scale3d(1.03, 1.03, 1) translate3d(0, -4px, 0);
           box-shadow:
             0 36px 72px -12px rgba(91, 61, 245, 0.22),
             0 16px 32px -6px rgba(0, 0, 0, 0.06);
@@ -341,20 +340,22 @@ export default function HeroVisual() {
         .cube-ground-shadow {
           width: 200px;
           height: 24px;
-          background: radial-gradient(ellipse at center, rgba(91, 61, 245, 0.18) 0%, rgba(91, 61, 245, 0.03) 60%, transparent 80%);
+          background: radial-gradient(ellipse at center, rgba(91, 61, 245, 0.22) 0%, rgba(91, 61, 245, 0.03) 60%, transparent 80%);
           margin: 16px auto 0;
           border-radius: 50%;
-          filter: blur(4px);
+          will-change: transform, opacity;
+          transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+          backface-visibility: hidden;
           animation: shadow-scale 5s ease-in-out infinite alternate;
         }
 
         @keyframes shadow-scale {
           0% {
-            transform: scale(1);
+            transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
             opacity: 0.6;
           }
           100% {
-            transform: scale(0.85);
+            transform: translate3d(0, 0, 0) scale3d(0.85, 0.85, 1);
             opacity: 0.35;
           }
         }

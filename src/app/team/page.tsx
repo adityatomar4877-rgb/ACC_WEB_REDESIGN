@@ -144,7 +144,7 @@ export default function TeamPage() {
 
         .team-controls-section {
           padding: 24px 0;
-          background: #FFFFFF;
+          background: var(--canvas-primary);
           border-bottom: 1px solid var(--hairline);
         }
 
@@ -172,9 +172,9 @@ export default function TeamPage() {
         }
 
         .cat-pill.active {
-          background: var(--ink-primary);
-          color: #FFFFFF;
-          border-color: var(--ink-primary);
+          background: var(--ink-heading);
+          color: var(--canvas-primary);
+          border-color: var(--ink-heading);
         }
 
         .team-grid-section {
@@ -189,13 +189,13 @@ export default function TeamPage() {
         }
 
         .team-card {
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border: 1px solid var(--hairline);
           border-radius: 16px;
           padding: 28px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+          box-shadow: var(--shadow-subtle);
           transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
         }
 
@@ -220,8 +220,9 @@ export default function TeamPage() {
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          background: #111111;
-          color: #FFFFFF;
+          background: var(--accent-subtle);
+          color: var(--accent-primary);
+          border: 1px solid var(--accent-purple-border);
           display: flex;
           align-items: center;
           justify-content: center;

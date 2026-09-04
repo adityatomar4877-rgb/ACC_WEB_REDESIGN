@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
+import ThemeToggle from './ThemeToggle';
+import StackingNavbar from './StackingNavbar';
 
 export default function Header() {
   const pathname = usePathname();
@@ -21,8 +23,16 @@ export default function Header() {
     setMobileOpen(false);
   }, [pathname]);
 
-  const navItems = [
+  const desktopNavItems = [
+    { label: 'Projects', href: '/projects' },
+    { label: 'Events', href: '/events' },
+    { label: 'About Us', href: '/about' },
+    { label: 'Contact', href: '/contact' }
+  ];
+
+  const mobileNavItems = [
     { label: 'Home', href: '/' },
+    { label: 'Projects', href: '/projects' },
     { label: 'Events', href: '/events' },
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' }
@@ -59,49 +69,33 @@ export default function Header() {
                 />
                 <path
                   d="M 74 18 C 64 15, 57 22, 57 30 C 57 38, 64 45, 74 42"
-                  stroke="#111827"
+                  stroke="currentColor"
                   strokeWidth="8"
                   strokeLinecap="round"
                   fill="none"
+                  className="logo-c-path"
                 />
                 <path
                   d="M 90 18 C 80 15, 73 22, 73 30 C 73 38, 80 45, 90 42"
-                  stroke="#111827"
+                  stroke="currentColor"
                   strokeWidth="8"
                   strokeLinecap="round"
                   fill="none"
+                  className="logo-c-path"
                 />
               </svg>
             </div>
             <span className="brand-org-name">Amity Coding Club</span>
           </NextLink>
 
-          {/* Desktop Navigation Links */}
-          <nav className="desktop-nav-menu" aria-label="Primary Navigation">
-            <ul className="nav-links-list">
-              {navItems.map((item) => {
-                const isActive = item.href === '/' ? pathname === '/' : pathname?.startsWith(item.href);
-                return (
-                  <li key={item.href} className="nav-menu-item">
-                    <NextLink
-                      href={item.href}
-                      className={`nav-link-anchor ${isActive ? 'active' : ''}`}
-                    >
-                      <span>{item.label}</span>
-                      {isActive && <span className="active-underline" />}
-                    </NextLink>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+          {/* Desktop Stacking Navigation */}
+          <div className="desktop-nav-menu">
+            <StackingNavbar items={desktopNavItems} />
+          </div>
 
-          {/* Right Action: Join Club */}
+          {/* Right Action: Theme Toggle */}
           <div className="nav-right-actions">
-            <NextLink href="/join" className="btn-nav-join">
-              <span>Join Club</span>
-              <span className="join-arrow">→</span>
-            </NextLink>
+            <ThemeToggle size="md" />
 
             {/* Mobile Hamburger Button */}
             <button
@@ -122,7 +116,7 @@ export default function Header() {
       {/* Mobile Drawer */}
       <div className={`mobile-nav-drawer ${mobileOpen ? 'open' : ''}`}>
         <ul className="mobile-drawer-links">
-          {navItems.map((item) => {
+          {mobileNavItems.map((item) => {
             const isActive = item.href === '/' ? pathname === '/' : pathname?.startsWith(item.href);
             return (
               <li key={item.href}>
@@ -138,10 +132,17 @@ export default function Header() {
           })}
         </ul>
 
-        <div className="mobile-drawer-cta">
-          <NextLink href="/join" className="btn-mobile-join">
-            Join Club →
-          </NextLink>
+        <div className="mobile-drawer-footer-block">
+          <div className="mobile-theme-row">
+            <span className="mobile-theme-label">Appearance</span>
+            <ThemeToggle size="md" showLabel />
+          </div>
+
+          <div className="mobile-drawer-cta">
+            <NextLink href="/join" className="btn-mobile-join">
+              Join Club →
+            </NextLink>
+          </div>
         </div>
       </div>
 
@@ -153,18 +154,18 @@ export default function Header() {
           width: 100%;
           height: var(--nav-height);
           z-index: 1000;
-          background-color: rgba(255, 255, 255, 0.9);
+          background-color: var(--nav-bg, rgba(255, 255, 255, 0.9));
           backdrop-filter: saturate(180%) blur(16px);
           -webkit-backdrop-filter: saturate(180%) blur(16px);
-          border-bottom: 1px solid rgba(17, 24, 39, 0.05);
+          border-bottom: 1px solid var(--nav-border, rgba(17, 24, 39, 0.05));
           transition: all 0.25s ease;
         }
 
         .site-header.scrolled {
           height: var(--nav-height-scrolled);
-          background-color: rgba(255, 255, 255, 0.96);
-          border-bottom: 1px solid rgba(17, 24, 39, 0.08);
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+          background-color: var(--nav-bg-scrolled, rgba(255, 255, 255, 0.96));
+          border-bottom: 1px solid var(--nav-border, rgba(17, 24, 39, 0.08));
+          box-shadow: var(--shadow-subtle, 0 2px 10px rgba(0, 0, 0, 0.03));
         }
 
         .nav-inner {
@@ -195,64 +196,31 @@ export default function Header() {
           height: 100%;
         }
 
+        .logo-c-path {
+          color: var(--ink-heading, #111827);
+          transition: color 0.2s ease;
+        }
+
         .brand-org-name {
           font-size: 1.0625rem;
           font-weight: 700;
-          color: #111827;
+          color: var(--ink-heading, #111827);
           letter-spacing: -0.02em;
+          transition: color 0.2s ease;
         }
 
-        /* Links */
+        /* Navigation */
         .desktop-nav-menu {
           display: flex;
-        }
-
-        .nav-links-list {
-          display: flex;
           align-items: center;
-          gap: 32px;
-          list-style: none;
-        }
-
-        .nav-menu-item {
-          position: relative;
-        }
-
-        .nav-link-anchor {
-          font-size: 0.9375rem;
-          font-weight: 500;
-          color: #5B6475;
-          padding: 6px 0;
-          display: inline-flex;
-          flex-direction: column;
-          align-items: center;
-          position: relative;
-          transition: color 0.15s ease;
-        }
-
-        .nav-link-anchor:hover {
-          color: #111827;
-        }
-
-        .nav-link-anchor.active {
-          color: #5B3DF5;
-          font-weight: 600;
-        }
-
-        .active-underline {
-          position: absolute;
-          bottom: -4px;
-          width: 18px;
-          height: 2.5px;
-          background-color: #5B3DF5;
-          border-radius: 2px;
+          justify-content: center;
         }
 
         /* Right Actions */
         .nav-right-actions {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 14px;
         }
 
         .btn-nav-join {
@@ -294,7 +262,7 @@ export default function Header() {
           width: 38px;
           height: 38px;
           border-radius: 8px;
-          border: 1px solid rgba(17, 24, 39, 0.1);
+          border: 1px solid var(--hairline-medium, rgba(17, 24, 39, 0.1));
           background: transparent;
           gap: 5px;
           cursor: pointer;
@@ -304,7 +272,7 @@ export default function Header() {
           display: block;
           width: 18px;
           height: 1.5px;
-          background-color: #111827;
+          background-color: var(--ink-heading, #111827);
           transition: transform 0.2s ease, opacity 0.2s ease;
         }
 
@@ -327,7 +295,7 @@ export default function Header() {
           left: 0;
           right: 0;
           bottom: 0;
-          background: #FFFFFF;
+          background: var(--canvas-primary, #FFFFFF);
           z-index: 990;
           display: flex;
           flex-direction: column;
@@ -355,17 +323,39 @@ export default function Header() {
         .mobile-drawer-anchor {
           font-size: 1.25rem;
           font-weight: 600;
-          color: #111827;
+          color: var(--ink-heading, #111827);
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding-bottom: 12px;
-          border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+          border-bottom: 1px solid var(--hairline, rgba(17, 24, 39, 0.06));
           text-decoration: none;
         }
 
         .mobile-drawer-anchor.active {
           color: #5B3DF5;
+        }
+
+        .mobile-drawer-footer-block {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+        }
+
+        .mobile-theme-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 16px;
+          background: var(--canvas-subtle);
+          border: 1px solid var(--hairline-medium);
+          border-radius: 12px;
+        }
+
+        .mobile-theme-label {
+          font-size: 0.9375rem;
+          font-weight: 600;
+          color: var(--ink-heading);
         }
 
         .btn-mobile-join {

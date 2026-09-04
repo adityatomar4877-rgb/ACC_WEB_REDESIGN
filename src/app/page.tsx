@@ -38,12 +38,7 @@ export default function HomePage() {
 
       {/* 02 SCROLL REVEAL SECTION */}
       <div id="scroll-reveal-quote">
-        <ScrollReveal
-          baseOpacity={0.08}
-          enableBlur
-          baseRotation={1.5}
-          blurStrength={6}
-        >
+        <ScrollReveal baseOpacity={0.12}>
           When does a coder become a developer? When he writes his first line of code? No! When he builds something that actually works? No! When he solves a problem nobody else could solve? No! A developer is born when he stops just writing code and starts creating.
         </ScrollReveal>
       </div>

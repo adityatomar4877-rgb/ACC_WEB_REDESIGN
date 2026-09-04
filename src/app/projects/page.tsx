@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { PROJECTS_DATA, Project } from '@/data/projects';
 import SubmitProjectModal from '@/components/Modals/SubmitProjectModal';
+import SmoothInput from '@/components/SmoothInput';
 
 export default function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -74,7 +75,7 @@ export default function ProjectsPage() {
             {/* Search Input */}
             <div className="search-box">
               <span className="search-icon">🔍</span>
-              <input
+              <SmoothInput
                 type="text"
                 placeholder="Search projects, technologies (e.g. Next.js, Rust)..."
                 value={searchQuery}
@@ -195,7 +196,7 @@ export default function ProjectsPage() {
 
         .projects-controls-section {
           padding: 24px 0;
-          background: #FFFFFF;
+          background: var(--canvas-primary);
           border-bottom: 1px solid var(--hairline);
         }
 
@@ -231,9 +232,9 @@ export default function ProjectsPage() {
         }
 
         .cat-pill.active {
-          background: var(--ink-primary);
-          color: #FFFFFF;
-          border-color: var(--ink-primary);
+          background: var(--ink-heading);
+          color: var(--canvas-primary);
+          border-color: var(--ink-heading);
         }
 
         .search-box {
@@ -258,13 +259,14 @@ export default function ProjectsPage() {
           border: 1px solid var(--hairline);
           font-size: 0.8125rem;
           background: var(--canvas-subtle);
+          color: var(--ink-primary);
           outline: none;
-          transition: border-color var(--transition-fast);
+          transition: border-color var(--transition-fast), background var(--transition-fast);
         }
 
         .search-input:focus {
           border-color: var(--accent-primary);
-          background: #FFFFFF;
+          background: var(--canvas-card);
         }
 
         .clear-btn {
@@ -287,13 +289,13 @@ export default function ProjectsPage() {
         }
 
         .project-grid-card {
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border: 1px solid var(--hairline);
           border-radius: 16px;
           padding: 28px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+          box-shadow: var(--shadow-subtle);
           transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
         }
 
@@ -429,7 +431,7 @@ export default function ProjectsPage() {
         .empty-state {
           text-align: center;
           padding: 64px 20px;
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border-radius: 16px;
           border: 1px solid var(--hairline);
           display: flex;

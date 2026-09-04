@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import confetti from 'canvas-confetti';
+import { triggerConfetti } from '@/lib/confetti';
+import SmoothInput from '@/components/SmoothInput';
 import {
   Mail,
   Linkedin,
@@ -90,16 +91,12 @@ export default function ContactPage() {
       setIsSubmitting(false);
       setIsSubmitted(true);
 
-      try {
-        confetti({
-          particleCount: 90,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#5B3DF5', '#F5B51B', '#3B82F6', '#10B981']
-        });
-      } catch {
-        // Confetti fallback
-      }
+      triggerConfetti({
+        particleCount: 90,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#5B3DF5', '#F5B51B', '#3B82F6', '#10B981']
+      });
     }, 800);
   };
 
@@ -189,7 +186,7 @@ export default function ContactPage() {
                         <label htmlFor="firstName" className="field-label">
                           First Name <span className="required-star">*</span>
                         </label>
-                        <input
+                        <SmoothInput
                           id="firstName"
                           type="text"
                           required
@@ -203,7 +200,7 @@ export default function ContactPage() {
                         <label htmlFor="lastName" className="field-label">
                           Last Name <span className="required-star">*</span>
                         </label>
-                        <input
+                        <SmoothInput
                           id="lastName"
                           type="text"
                           required
@@ -220,7 +217,7 @@ export default function ContactPage() {
                       <label htmlFor="email" className="field-label">
                         Email Address <span className="required-star">*</span>
                       </label>
-                      <input
+                      <SmoothInput
                         id="email"
                         type="email"
                         required
@@ -253,7 +250,7 @@ export default function ContactPage() {
                       <label htmlFor="subject" className="field-label">
                         Subject <span className="field-optional">(Optional)</span>
                       </label>
-                      <input
+                      <SmoothInput
                         id="subject"
                         type="text"
                         value={customSubject}
@@ -622,7 +619,7 @@ export default function ContactPage() {
 
         /* Content Card Styling */
         .content-card {
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border: 1px solid var(--hairline);
           border-radius: var(--radius-xl);
           padding: 36px;
@@ -727,7 +724,7 @@ export default function ContactPage() {
         .field-input,
         .field-textarea {
           width: 100%;
-          background: #FFFFFF;
+          background: var(--canvas-subtle);
           border: 1px solid var(--hairline-medium);
           border-radius: var(--radius-md);
           padding: 11px 14px;
@@ -735,7 +732,7 @@ export default function ContactPage() {
           color: var(--ink-primary);
           outline: none;
           font-family: var(--font-sans);
-          transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+          transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
         }
 
         .field-input::placeholder,
@@ -746,6 +743,7 @@ export default function ContactPage() {
         .field-input:focus,
         .field-textarea:focus {
           border-color: var(--accent-primary);
+          background: var(--canvas-card);
           box-shadow: 0 0 0 3px var(--accent-purple-light);
         }
 
@@ -777,7 +775,7 @@ export default function ContactPage() {
         .topic-select-pill:hover {
           color: var(--ink-primary);
           border-color: var(--ink-secondary);
-          background: #E5E7EB;
+          background: var(--canvas-secondary);
         }
 
         .topic-select-pill.selected {
@@ -908,7 +906,7 @@ export default function ContactPage() {
         }
 
         .channel-box {
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border: 1px solid var(--hairline);
           border-radius: var(--radius-lg);
           padding: 18px 22px;
@@ -1047,8 +1045,9 @@ export default function ContactPage() {
         }
 
         .copy-action:hover {
-          background: #E5E7EB;
+          background: var(--canvas-subtle);
           color: var(--ink-primary);
+          border-color: var(--hairline-medium);
         }
 
         .text-emerald {
@@ -1200,7 +1199,7 @@ export default function ContactPage() {
         }
 
         .faq-card {
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border: 1px solid var(--hairline);
           border-radius: var(--radius-md);
           overflow: hidden;

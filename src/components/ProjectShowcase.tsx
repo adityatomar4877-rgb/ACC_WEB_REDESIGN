@@ -620,7 +620,7 @@ export default function ProjectShowcase() {
           height: 36px;
           border-radius: 50%;
           border: 1px solid var(--hairline);
-          background-color: #FFFFFF;
+          background-color: var(--canvas-card);
           color: var(--ink-primary);
           display: flex;
           align-items: center;

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import confetti from 'canvas-confetti';
+import { triggerConfetti } from '@/lib/confetti';
 import Link from 'next/link';
+import SmoothInput from '@/components/SmoothInput';
 
 export default function JoinPage() {
   const [step, setStep] = useState(1);
@@ -51,15 +52,11 @@ export default function JoinPage() {
       setMemberId(generatedId);
       setStep(4);
 
-      try {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-      } catch {
-        // ignore
-      }
+      triggerConfetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
     }
   };
 
@@ -112,7 +109,7 @@ export default function JoinPage() {
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="join-name">Full Name *</label>
-                  <input
+                  <SmoothInput
                     id="join-name"
                     type="text"
                     className="form-input"
@@ -125,7 +122,7 @@ export default function JoinPage() {
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="join-email">University / Personal Email *</label>
-                  <input
+                  <SmoothInput
                     id="join-email"
                     type="email"
                     className="form-input"
@@ -139,7 +136,7 @@ export default function JoinPage() {
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label" htmlFor="join-enroll">Enrollment Number</label>
-                    <input
+                    <SmoothInput
                       id="join-enroll"
                       type="text"
                       className="form-input"
@@ -232,7 +229,7 @@ export default function JoinPage() {
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="join-gh">GitHub Profile URL *</label>
-                  <input
+                  <SmoothInput
                     id="join-gh"
                     type="url"
                     className="form-input"
@@ -245,7 +242,7 @@ export default function JoinPage() {
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="join-li">LinkedIn Profile URL</label>
-                  <input
+                  <SmoothInput
                     id="join-li"
                     type="url"
                     className="form-input"
@@ -345,11 +342,11 @@ export default function JoinPage() {
         }
 
         .application-card {
-          background: #FFFFFF;
+          background: var(--canvas-card);
           border: 1px solid var(--hairline);
           border-radius: 20px;
           padding: 40px;
-          box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+          box-shadow: var(--shadow-card);
         }
 
         /* Progress */
@@ -386,7 +383,7 @@ export default function JoinPage() {
 
         .step-node.active .step-number {
           background: var(--ink-heading);
-          color: #FFFFFF;
+          color: var(--canvas-primary);
         }
 
         .step-label {
@@ -441,14 +438,15 @@ export default function JoinPage() {
           padding: 12px 16px;
           border: 1px solid var(--hairline);
           border-radius: 10px;
-          background: #FFFFFF;
+          background: var(--canvas-subtle);
           color: var(--ink-primary);
           font-size: 0.9375rem;
-          transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+          transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
         }
 
         .form-input:focus {
           border-color: var(--accent-primary);
+          background: var(--canvas-card);
           box-shadow: 0 0 0 3px var(--accent-subtle);
           outline: none;
         }

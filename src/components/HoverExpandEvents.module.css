@@ -1,5 +1,5 @@
 /* ============================================================
-   HOVER EXPAND EVENTS - ULTRA SMOOTH LIGHT THEME CARD DECK
+   HOVER EXPAND EVENTS - DYNAMIC THEME CARD DECK
    ============================================================ */
 
 .deckStack {
@@ -16,21 +16,21 @@
   overflow: hidden;
   cursor: pointer;
   user-select: none;
-  background: #FFFFFF;
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: var(--card-bg, #FFFFFF);
+  border: 1px solid var(--card-border, rgba(226, 232, 240, 0.9));
   transform: translateZ(0);
   will-change: height, box-shadow, border-color;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
 
 .card:hover {
   border-color: rgba(91, 61, 245, 0.35);
-  box-shadow: 0 10px 30px -4px rgba(91, 61, 245, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px -4px rgba(91, 61, 245, 0.12), var(--shadow-subtle, 0 2px 8px rgba(0, 0, 0, 0.02));
 }
 
 .cardExpanded {
   border-color: rgba(91, 61, 245, 0.45) !important;
-  box-shadow: 0 20px 44px -8px rgba(91, 61, 245, 0.12), 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+  box-shadow: 0 20px 44px -8px rgba(91, 61, 245, 0.18), var(--shadow-elevated, 0 4px 16px rgba(0, 0, 0, 0.03)) !important;
 }
 
 /* Ambient Subtle Glow in Expanded Mode */
@@ -43,7 +43,7 @@
   border-radius: 50%;
   pointer-events: none;
   filter: blur(80px);
-  opacity: 0.16;
+  opacity: 0.22;
   z-index: 0;
   transform: translateZ(0);
 }
@@ -61,7 +61,8 @@
   justify-content: space-between;
   padding: 0 30px;
   gap: 20px;
-  background: #FFFFFF;
+  background: var(--card-bg, #FFFFFF);
+  transition: background-color 0.25s ease;
 }
 
 .stripLeft {
@@ -83,30 +84,30 @@
   display: inline-flex;
   align-items: baseline;
   gap: 4px;
-  background: #F8FAFC;
+  background: var(--canvas-subtle, #F8FAFC);
   padding: 4px 12px;
   border-radius: 9999px;
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid var(--hairline-medium, rgba(226, 232, 240, 0.9));
   font-family: var(--font-mono, monospace);
 }
 
 .stripMonth {
   font-size: 0.6875rem;
   font-weight: 700;
-  color: #64748B;
+  color: var(--ink-secondary, #64748B);
   letter-spacing: 0.04em;
 }
 
 .stripDay {
   font-size: 0.9375rem;
   font-weight: 800;
-  color: #0F172A;
+  color: var(--ink-heading, #0F172A);
 }
 
 .stripTitle {
   font-size: 1.0625rem;
   font-weight: 700;
-  color: #0F172A;
+  color: var(--ink-heading, #0F172A);
   letter-spacing: -0.015em;
   white-space: nowrap;
 }
@@ -119,7 +120,7 @@
 
 .stripSubtitle {
   font-size: 0.84375rem;
-  color: #64748B;
+  color: var(--ink-secondary, #64748B);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -145,7 +146,7 @@
 
 .stripFormat {
   font-size: 0.78125rem;
-  color: #64748B;
+  color: var(--ink-secondary, #64748B);
   font-weight: 500;
 }
 
@@ -156,7 +157,7 @@
   font-family: var(--font-mono, monospace);
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #94A3B8;
+  color: var(--ink-muted, #94A3B8);
   transition: all 0.2s ease;
 }
 
@@ -178,7 +179,8 @@
   justify-content: space-between;
   padding: 32px 36px;
   gap: 16px;
-  background: #FFFFFF;
+  background: var(--card-bg, #FFFFFF);
+  transition: background-color 0.25s ease;
 }
 
 /* Top badges row */
@@ -210,21 +212,21 @@
 .expCatBadge {
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #1E293B;
-  background: #F1F5F9;
+  color: var(--ink-heading, #1E293B);
+  background: var(--canvas-subtle, #F1F5F9);
   padding: 4px 12px;
   border-radius: 6px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--hairline-medium, rgba(226, 232, 240, 0.8));
 }
 
 .expFormatBadge {
   font-size: 0.6875rem;
   font-weight: 500;
-  color: #475569;
-  background: #F8FAFC;
+  color: var(--ink-secondary, #475569);
+  background: var(--canvas-subtle, #F8FAFC);
   padding: 4px 10px;
   border-radius: 6px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--hairline-medium, rgba(226, 232, 240, 0.8));
 }
 
 .expPrizeBadge {
@@ -233,8 +235,8 @@
   gap: 4px;
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #B45309;
-  background: #FEF3C7;
+  color: #F59E0B;
+  background: rgba(245, 158, 11, 0.12);
   border: 1px solid rgba(245, 158, 11, 0.25);
   padding: 4px 10px;
   border-radius: 6px;
@@ -247,8 +249,8 @@
   font-family: var(--font-mono, monospace);
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #059669;
-  background: #ECFDF5;
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.25);
   padding: 4px 12px;
   border-radius: 9999px;
@@ -286,7 +288,7 @@
 .expTitle {
   font-size: clamp(1.85rem, 3.2vw, 2.35rem);
   font-weight: 800;
-  color: #0F172A;
+  color: var(--ink-heading, #0F172A);
   letter-spacing: -0.03em;
   line-height: 1.12;
   margin: 0;
@@ -301,7 +303,7 @@
 
 .expDesc {
   font-size: 0.90625rem;
-  color: #475569;
+  color: var(--ink-secondary, #475569);
   line-height: 1.6;
   margin: 2px 0 0;
   max-width: 640px;
@@ -321,12 +323,12 @@
 
 .expTagPill {
   padding: 3px 9px;
-  background: #F8FAFC;
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: var(--canvas-subtle, #F8FAFC);
+  border: 1px solid var(--hairline-medium, rgba(226, 232, 240, 0.9));
   border-radius: 6px;
   font-size: 0.6875rem;
   font-family: var(--font-mono, monospace);
-  color: #64748B;
+  color: var(--ink-secondary, #64748B);
   font-weight: 500;
 }
 
@@ -337,15 +339,15 @@
   border-radius: 18px;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--hairline-medium, rgba(226, 232, 240, 0.9));
+  box-shadow: var(--shadow-card, 0 12px 28px -4px rgba(0, 0, 0, 0.08));
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
   background: #0F172A;
 }
 
 .expPosterCard:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 16px 36px -4px rgba(91, 61, 245, 0.2);
+  box-shadow: 0 16px 36px -4px rgba(91, 61, 245, 0.25);
 }
 
 .posterImg {
@@ -372,12 +374,12 @@
   font-family: var(--font-mono, monospace);
   font-size: 0.625rem;
   font-weight: 800;
-  background: #FFFFFF;
-  color: #0F172A;
+  background: var(--canvas-card, #FFFFFF);
+  color: var(--ink-heading, #0F172A);
   padding: 2px 7px;
   border-radius: 4px;
   letter-spacing: 0.06em;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .posterInfo {
@@ -411,7 +413,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;
-  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  border-top: 1px solid var(--hairline, rgba(226, 232, 240, 0.8));
   flex-wrap: wrap;
   gap: 16px;
 }
@@ -429,7 +431,7 @@
   gap: 6px;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #475569;
+  color: var(--ink-secondary, #475569);
 }
 
 .expActionsGroup {
@@ -443,9 +445,9 @@
   align-items: center;
   gap: 6px;
   padding: 9px 18px;
-  background: #F8FAFC;
-  border: 1px solid rgba(203, 213, 225, 0.8);
-  color: #1E293B;
+  background: var(--canvas-subtle, #F8FAFC);
+  border: 1px solid var(--hairline-medium, rgba(203, 213, 225, 0.8));
+  color: var(--ink-heading, #1E293B);
   border-radius: 12px;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -454,7 +456,7 @@
 }
 
 .btnDetails:hover {
-  background: #F1F5F9;
+  background: var(--canvas-elevated, #F1F5F9);
   border-color: var(--accent-primary, #5B3DF5);
   color: var(--accent-primary, #5B3DF5);
   transform: translateY(-1px);

@@ -24,14 +24,6 @@ export default function HeroSection() {
         <div className="hero-two-col-grid">
           {/* LEFT COLUMN: Hero Copy & Actions */}
           <div className="hero-content-col">
-            {/* Small eyebrow badge */}
-            <div className="hero-eyebrow-wrap">
-              <span className="hero-eyebrow-pill">
-                <span className="eyebrow-dot" />
-                <span className="eyebrow-text">CODE • COLLABORATE • CREATE</span>
-              </span>
-            </div>
-
             {/* Main Signature Headline */}
             <h1 className="hero-main-headline">
               <span className="headline-line">
@@ -415,14 +407,18 @@ export default function HeroSection() {
         }
 
         .arrow-down-glyph {
+          display: inline-block;
           font-size: 0.9375rem;
           font-weight: 700;
+          will-change: transform;
+          backface-visibility: hidden;
+          transform: translate3d(0, 0, 0);
           animation: bounce-subtle 2s infinite ease-in-out;
         }
 
         @keyframes bounce-subtle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(3px); }
+          0%, 100% { transform: translate3d(0, 0, 0); }
+          50% { transform: translate3d(0, 3px, 0); }
         }
 
         @media (max-width: 1024px) {
