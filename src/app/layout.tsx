@@ -9,10 +9,40 @@ import motionTheme from '@/motion.theme';
 import { PageTransitionProvider, CinematicCurtain, PageTransitionWrapper } from '@/components/transitions';
 
 export const metadata: Metadata = {
-  title: 'Amity Coding Club • Build. Learn. Ship.',
+  metadataBase: new URL('https://amitycodingclub.tech'),
+  title: {
+    default: 'Amity Coding Club • Build. Learn. Ship.',
+    template: '%s • Amity Coding Club'
+  },
   description: 'A community of builders, problem solvers, and engineers creating real-world impact through code at Amity University.',
-  keywords: ['Amity Coding Club', 'ACC', 'developer community', 'hackathons', 'AI/ML', 'Next.js', 'open source'],
-  authors: [{ name: 'Amity Coding Club' }]
+  keywords: ['Amity Coding Club', 'ACC', 'developer community', 'hackathons', 'AI/ML', 'Next.js', 'open source', 'web development', 'engineering'],
+  authors: [{ name: 'Amity Coding Club' }],
+  creator: 'Amity Coding Club',
+  publisher: 'Amity Coding Club',
+  openGraph: {
+    title: 'Amity Coding Club • Build. Learn. Ship.',
+    description: 'A community of builders, problem solvers, and engineers creating real-world impact through code at Amity University.',
+    url: 'https://amitycodingclub.tech',
+    siteName: 'Amity Coding Club',
+    locale: 'en_US',
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Amity Coding Club • Build. Learn. Ship.',
+    description: 'A community of builders, problem solvers, and engineers creating real-world impact through code at Amity University.'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1
+    }
+  }
 };
 
 export const viewport: Viewport = {
