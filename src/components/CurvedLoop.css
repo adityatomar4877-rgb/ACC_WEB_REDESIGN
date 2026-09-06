@@ -1,0 +1,45 @@
+.curved-loop-jacket {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.curved-loop-svg {
+  user-select: none;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  display: block;
+  font-size: 5.25rem;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.01em;
+  fill: var(--ink-heading, #ffffff);
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+  pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+  .curved-loop-svg {
+    font-size: 4.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .curved-loop-svg {
+    font-size: 3.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .curved-loop-svg {
+    font-size: 2.25rem;
+  }
+}

@@ -4,6 +4,9 @@ import StyledJsxRegistry from './registry';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { MotionUIThemeProvider } from '@/components/motion-ui/MotionUIThemeProvider';
+import motionTheme from '@/motion.theme';
+import { PageTransitionProvider, CinematicCurtain, PageTransitionWrapper } from '@/components/transitions';
 
 export const metadata: Metadata = {
   title: 'Amity Coding Club • Build. Learn. Ship.',
@@ -55,11 +58,18 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <StyledJsxRegistry>
-            <Header />
-            <main className="main-content">{children}</main>
-            <Footer />
-          </StyledJsxRegistry>
+          <MotionUIThemeProvider theme={motionTheme}>
+            <PageTransitionProvider>
+              <CinematicCurtain />
+              <StyledJsxRegistry>
+                <Header />
+                <main className="main-content">
+                  <PageTransitionWrapper>{children}</PageTransitionWrapper>
+                </main>
+                <Footer />
+              </StyledJsxRegistry>
+            </PageTransitionProvider>
+          </MotionUIThemeProvider>
         </ThemeProvider>
       </body>
     </html>

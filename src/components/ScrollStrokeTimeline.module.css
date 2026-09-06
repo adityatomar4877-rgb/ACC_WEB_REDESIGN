@@ -1,0 +1,925 @@
+/* ==========================================================================
+   Theme-Adaptive Panoramic Timeline with Aceternity Scroll-Beam Animation
+   ========================================================================== */
+
+.timelineSection {
+  position: relative;
+  background: var(--canvas-subtle);
+  color: var(--ink-primary);
+  padding: 104px 0 120px;
+  overflow: hidden;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Light ambient glows */
+.timelineSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55vw;
+  height: 600px;
+  background: radial-gradient(circle at 18% 28%, rgba(91, 61, 245, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+  transition: background 0.3s ease;
+}
+
+.timelineSection::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50vw;
+  height: 500px;
+  background: radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 1;
+  transition: background 0.3s ease;
+}
+
+/* Dark theme ambient overrides */
+:global([data-theme='dark']) .timelineSection,
+:global(html.dark) .timelineSection {
+  background: #090814;
+  border-top-color: rgba(255, 255, 255, 0.06);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+:global([data-theme='dark']) .timelineSection::before,
+:global(html.dark) .timelineSection::before {
+  background: radial-gradient(circle at 18% 28%, rgba(139, 92, 246, 0.16) 0%, transparent 60%);
+}
+
+:global([data-theme='dark']) .timelineSection::after,
+:global(html.dark) .timelineSection::after {
+  background: radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.08) 0%, transparent 55%);
+}
+
+/* Master 4-column container */
+.timelineWrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) 110px minmax(560px, 1fr) 110px;
+  gap: 36px;
+  align-items: start;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Column 1: Left Sticky Hero & Orbital Widget
+   ========================================================================== */
+
+.leftColumn {
+  position: sticky;
+  top: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 580px;
+}
+
+.journeyTag {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.8rem;
+  letter-spacing: 0.28em;
+  color: var(--accent-purple);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+:global([data-theme='dark']) .journeyTag,
+:global(html.dark) .journeyTag {
+  color: #94A3B8;
+}
+
+.mainHeadline {
+  font-size: clamp(2.6rem, 3.8vw, 3.75rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: var(--ink-heading);
+  margin: 0 0 20px;
+}
+
+:global([data-theme='dark']) .mainHeadline,
+:global(html.dark) .mainHeadline {
+  color: #FFFFFF;
+}
+
+.matterWord {
+  color: var(--accent-purple);
+  background: linear-gradient(135deg, #7C4DFF 0%, #5B3DF5 60%, #4338CA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+:global([data-theme='dark']) .matterWord,
+:global(html.dark) .matterWord {
+  background: linear-gradient(135deg, #C084FC 0%, #A855F7 60%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.amberDot {
+  color: var(--accent-yellow-warm);
+  -webkit-text-fill-color: var(--accent-yellow-warm);
+  text-shadow: 0 0 16px rgba(245, 158, 11, 0.65);
+}
+
+.leadDescription {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-secondary);
+  max-width: 320px;
+  margin: 0;
+}
+
+:global([data-theme='dark']) .leadDescription,
+:global(html.dark) .leadDescription {
+  color: #94A3B8;
+}
+
+/* Bottom Left Cosmic Rings & Tagline */
+.bottomLeftWidget {
+  margin-top: auto;
+  padding-top: 48px;
+  position: relative;
+}
+
+.orbitBox {
+  position: relative;
+  width: 140px;
+  height: 90px;
+  margin-bottom: 8px;
+}
+
+.orbitSvg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.orbitArcOuter {
+  stroke: var(--hairline-medium);
+}
+
+:global([data-theme='dark']) .orbitArcOuter,
+:global(html.dark) .orbitArcOuter {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+
+.orbitArcInner {
+  stroke: rgba(245, 158, 11, 0.3);
+}
+
+:global([data-theme='dark']) .orbitArcInner,
+:global(html.dark) .orbitArcInner {
+  stroke: rgba(245, 158, 11, 0.16);
+}
+
+.satelliteBeacon {
+  filter: drop-shadow(0 0 8px #7C4DFF) drop-shadow(0 0 14px rgba(124, 77, 255, 0.7));
+  animation: pulseBeacon 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulseBeacon {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.35); opacity: 1; }
+}
+
+.brighterTag {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+}
+
+:global([data-theme='dark']) .brighterTag,
+:global(html.dark) .brighterTag {
+  color: #64748B;
+}
+
+.brighterLine {
+  width: 34px;
+  height: 1.5px;
+  background: var(--hairline-medium);
+  margin-top: 10px;
+}
+
+:global([data-theme='dark']) .brighterLine,
+:global(html.dark) .brighterLine {
+  background: rgba(148, 163, 184, 0.35);
+}
+
+/* ==========================================================================
+   Column 2: Center Spine (Aceternity Animated Scroll Beam & Nodes)
+   ========================================================================== */
+
+.spineColumn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 680px;
+  padding-top: 20px;
+}
+
+/* Base ghost track (Aceternity styling) */
+.spineTrackBase {
+  position: absolute;
+  top: 36px;
+  right: 17px;
+  width: 2px;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    var(--hairline-medium) 4%, 
+    var(--hairline-medium) 94%, 
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+:global([data-theme='dark']) .spineTrackBase,
+:global(html.dark) .spineTrackBase {
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.12) 4%, 
+    rgba(255, 255, 255, 0.12) 94%, 
+    transparent 100%
+  );
+}
+
+/* Aceternity animated advancing beam */
+.spineAnimatedBeam {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  background: linear-gradient(to top, 
+    #F59E0B 0%, 
+    #A855F7 28%, 
+    #5B3DF5 65%, 
+    transparent 100%
+  );
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.7), 0 0 18px rgba(245, 158, 11, 0.5);
+  z-index: 2;
+}
+
+/* Glowing leading tip on the advancing beam */
+.spineBeamHead {
+  position: absolute;
+  bottom: -3px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #F59E0B;
+  box-shadow: 0 0 10px #F59E0B, 0 0 20px rgba(245, 158, 11, 0.8);
+}
+
+/* Year + node row on spine */
+.spineYearRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  height: 154px;
+  position: relative;
+  z-index: 3;
+}
+
+.yearLabel {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink-heading);
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+}
+
+:global([data-theme='dark']) .yearLabel,
+:global(html.dark) .yearLabel {
+  color: #FFFFFF;
+}
+
+/* Halo container centered exactly over the 2px spine line */
+.nodeHaloContainer {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nodeHaloRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.haloPurple {
+  background: rgba(91, 61, 245, 0.12);
+  border: 1px solid rgba(91, 61, 245, 0.35);
+  box-shadow: 0 0 14px rgba(91, 61, 245, 0.25);
+}
+
+:global([data-theme='dark']) .haloPurple,
+:global(html.dark) .haloPurple {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.3);
+}
+
+.haloAmber {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.25);
+}
+
+:global([data-theme='dark']) .haloAmber,
+:global(html.dark) .haloAmber {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
+}
+
+.nodeDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 4;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nodePurple {
+  background: var(--accent-purple);
+  box-shadow: 0 0 0 3px rgba(91, 61, 245, 0.2), 0 0 14px rgba(91, 61, 245, 0.45);
+}
+
+:global([data-theme='dark']) .nodePurple,
+:global(html.dark) .nodePurple {
+  background: #A855F7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25), 0 0 18px #A855F7;
+}
+
+.nodeAmber {
+  background: var(--accent-yellow-warm);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2), 0 0 14px rgba(245, 158, 11, 0.45);
+}
+
+:global([data-theme='dark']) .nodeAmber,
+:global(html.dark) .nodeAmber {
+  background: #F59E0B;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25), 0 0 18px #F59E0B;
+}
+
+/* Bottom dashed continuation tail */
+.spineDashedTail {
+  position: absolute;
+  bottom: 16px;
+  right: 17px;
+  width: 2px;
+  height: 56px;
+  border-left: 2px dashed var(--hairline-medium);
+  z-index: 1;
+}
+
+:global([data-theme='dark']) .spineDashedTail,
+:global(html.dark) .spineDashedTail {
+  border-left-color: rgba(255, 255, 255, 0.28);
+}
+
+.spineCircleTerminus {
+  position: absolute;
+  bottom: 0;
+  right: 11px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--hairline-medium);
+  background: var(--canvas-primary);
+  z-index: 2;
+}
+
+:global([data-theme='dark']) .spineCircleTerminus,
+:global(html.dark) .spineCircleTerminus {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: #090814;
+}
+
+/* ==========================================================================
+   Column 3: Right Milestone Cards Deck (Theme Adaptive)
+   ========================================================================== */
+
+.cardsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.milestoneCard {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 22px 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s, box-shadow 0.25s;
+  min-height: 132px;
+}
+
+.milestoneCard:hover {
+  transform: translateX(5px) translateY(-2px);
+  border-color: rgba(91, 61, 245, 0.3);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.08), 0 0 20px rgba(91, 61, 245, 0.1);
+}
+
+/* Dark mode card override */
+:global([data-theme='dark']) .milestoneCard,
+:global(html.dark) .milestoneCard {
+  background: linear-gradient(135deg, rgba(26, 21, 48, 0.65) 0%, rgba(14, 12, 26, 0.85) 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+:global([data-theme='dark']) .milestoneCard:hover,
+:global(html.dark) .milestoneCard:hover {
+  border-color: rgba(168, 85, 247, 0.38);
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.65), 0 0 24px rgba(168, 85, 247, 0.16);
+}
+
+/* Icon Badge */
+.cardIconBadge {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badgePurple {
+  background: rgba(91, 61, 245, 0.08);
+  border: 1px solid rgba(91, 61, 245, 0.2);
+  color: var(--accent-purple);
+}
+
+:global([data-theme='dark']) .badgePurple,
+:global(html.dark) .badgePurple {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.26);
+  color: #C084FC;
+}
+
+.badgeAmber {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  color: var(--accent-yellow-warm);
+}
+
+:global([data-theme='dark']) .badgeAmber,
+:global(html.dark) .badgeAmber {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.26);
+  color: #FBBF24;
+}
+
+/* Card Content */
+.cardContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink-heading);
+  margin: 0 0 7px;
+  letter-spacing: -0.01em;
+}
+
+:global([data-theme='dark']) .cardTitle,
+:global(html.dark) .cardTitle {
+  color: #F8FAFC;
+}
+
+.cardDesc {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--ink-secondary);
+  margin: 0;
+}
+
+:global([data-theme='dark']) .cardDesc,
+:global(html.dark) .cardDesc {
+  color: #94A3B8;
+}
+
+/* ==========================================================================
+   Preview Widgets (Terminal, Hackathon, Navigator, Trophy)
+   ========================================================================== */
+
+.previewContainer {
+  width: 204px;
+  height: 104px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: #0D111C;
+  border: 1px solid var(--hairline-medium);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+:global([data-theme='dark']) .previewContainer,
+:global(html.dark) .previewContainer {
+  background: #08070E;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+/* 1. Terminal Preview (2022) */
+.terminalPreview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  background: #0E1322;
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+:global([data-theme='dark']) .terminalPreview,
+:global(html.dark) .terminalPreview {
+  background: #08070F;
+}
+
+.terminalBar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.dotRed { width: 7px; height: 7px; border-radius: 50%; background: #EF4444; }
+.dotYellow { width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; }
+.dotGreen { width: 7px; height: 7px; border-radius: 50%; background: #10B981; }
+
+.terminalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.terminalCommand {
+  font-size: 0.76rem;
+  color: #F8FAFC;
+  font-weight: 600;
+}
+
+.terminalPrompt {
+  color: #A855F7;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.terminalOutput {
+  font-size: 0.68rem;
+  color: #34D399;
+  letter-spacing: 0.02em;
+}
+
+.cursorBlink {
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* 2. Hackathon Stage Preview (2023) */
+.hackathonPreview {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: radial-gradient(ellipse at 50% 10%, #201C38 0%, #0A0E1A 75%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 10px;
+  overflow: hidden;
+}
+
+:global([data-theme='dark']) .hackathonPreview,
+:global(html.dark) .hackathonPreview {
+  background: radial-gradient(ellipse at 50% 10%, #201C38 0%, #08070F 75%);
+}
+
+.projectorScreen {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  padding: 5px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.12);
+}
+
+.projectorMain {
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #FFFFFF;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.audienceSilhouette {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 38px;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* 3. AI Campus Navigator Preview (2024) */
+.navigatorPreview {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #0B0E1B;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+}
+
+:global([data-theme='dark']) .navigatorPreview,
+:global(html.dark) .navigatorPreview {
+  background: #080812;
+}
+
+.navigatorHeading {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #E2E8F0;
+  letter-spacing: -0.01em;
+  z-index: 2;
+  margin-bottom: 2px;
+}
+
+.navigatorSvg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.radarPulse {
+  animation: radarWave 2.4s ease-out infinite;
+  transform-origin: 155px 42px;
+}
+
+@keyframes radarWave {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* 4. Podium & Trophy Preview (2025) */
+.trophyPreview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: radial-gradient(circle at 75% 45%, #251E3E 0%, #0A0E1C 70%);
+  position: relative;
+}
+
+:global([data-theme='dark']) .trophyPreview,
+:global(html.dark) .trophyPreview {
+  background: radial-gradient(circle at 75% 45%, #251E3E 0%, #08070F 70%);
+}
+
+.trophyTaglines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.trophyTag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #E2E8F0;
+  letter-spacing: -0.01em;
+}
+
+.trophyStageWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.goldenTrophyIcon {
+  color: #F59E0B;
+  filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.75)) drop-shadow(0 0 18px rgba(245, 158, 11, 0.4));
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.podiumSteps {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.stepTwo {
+  width: 18px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 3px 3px 0 0;
+}
+
+.stepOne {
+  width: 22px;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.45) 0%, rgba(245, 158, 11, 0.18) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 4px 4px 0 0;
+}
+
+.stepThree {
+  width: 18px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px 3px 0 0;
+}
+
+/* Bottom "And many more milestones ahead..." row */
+.aheadRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding-left: 6px;
+}
+
+.aheadText {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+}
+
+:global([data-theme='dark']) .aheadText,
+:global(html.dark) .aheadText {
+  color: #64748B;
+}
+
+/* ==========================================================================
+   Column 4: Far Right Editorial Typography
+   ========================================================================== */
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 580px;
+  padding-top: 8px;
+  padding-bottom: 24px;
+}
+
+.editorialBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.editorialWord {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+}
+
+:global([data-theme='dark']) .editorialWord,
+:global(html.dark) .editorialWord {
+  color: #64748B;
+}
+
+.editorialSlash {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.85rem;
+  color: var(--accent-purple);
+  margin-bottom: 2px;
+}
+
+:global([data-theme='dark']) .editorialSlash,
+:global(html.dark) .editorialSlash {
+  color: rgba(168, 85, 247, 0.6);
+}
+
+.editorialDivider {
+  width: 28px;
+  height: 1.5px;
+  background: var(--hairline-medium);
+  margin-top: 8px;
+}
+
+:global([data-theme='dark']) .editorialDivider,
+:global(html.dark) .editorialDivider {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+
+@media (max-width: 1280px) {
+  .timelineWrapper {
+    grid-template-columns: minmax(260px, 300px) 100px minmax(480px, 1fr);
+    gap: 28px;
+  }
+  .rightColumn {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .timelineSection {
+    padding: 80px 0 96px;
+  }
+  .timelineWrapper {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    padding: 0 24px;
+  }
+  .leftColumn {
+    position: static;
+    min-height: auto;
+  }
+  .bottomLeftWidget {
+    display: none;
+  }
+  .spineColumn {
+    display: none;
+  }
+  .cardsColumn {
+    gap: 20px;
+  }
+  .milestoneCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .previewContainer {
+    width: 100%;
+    height: 110px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mainHeadline {
+    font-size: 2.25rem;
+  }
+  .milestoneCard {
+    padding: 18px 16px;
+    gap: 16px;
+  }
+}

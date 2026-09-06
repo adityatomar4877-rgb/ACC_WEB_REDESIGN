@@ -1,171 +1,174 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useId } from 'react';
+import React, { useRef, useEffect, useState, useMemo, useId } from 'react';
+import './CurvedLoop.css';
 
 export interface CurvedLoopProps {
   marqueeText?: string;
   speed?: number;
+  className?: string;
   curveAmount?: number;
   direction?: 'left' | 'right';
   interactive?: boolean;
-  className?: string;
-  textColor?: string;
-  fontSize?: string | number;
-  fontWeight?: string | number;
+  style?: React.CSSProperties;
 }
 
-export default function CurvedLoop({
-  marqueeText = 'BUILD ✦ LEARN ✦ SHIP ✦ AMITY CODING CLUB ✦',
+const CurvedLoop: React.FC<CurvedLoopProps> = ({
+  marqueeText = 'AMITY CODING CLUB ✦ BUILD ✦ LEARN ✦ SHIP ✦ CREATE TOMORROW ✦',
   speed = 2,
-  curveAmount = 240,
+  className,
+  curveAmount = 280,
   direction = 'left',
-  interactive = false,
-  className = '',
-  textColor = 'currentColor',
-  fontSize = '1.75rem',
-  fontWeight = '800'
-}: CurvedLoopProps) {
-  const generatedId = useId().replace(/:/g, '');
-  const pathId = `curved-loop-path-${generatedId}`;
-  
+  interactive = true,
+  style
+}) => {
+  const text = useMemo(() => {
+    const hasTrailing = /\s|\u00A0$/.test(marqueeText);
+    return (hasTrailing ? marqueeText.replace(/\s+$/, '') : marqueeText) + '\u00A0';
+  }, [marqueeText]);
+
+  const measureRef = useRef<SVGTextElement>(null);
+  const textPathRef = useRef<SVGTextPathElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const [spacing, setSpacing] = useState(0);
   const [offset, setOffset] = useState(0);
-  const offsetRef = useRef(0);
-  const speedMultiplierRef = useRef(1);
-  const animFrameRef = useRef<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isVisibleRef = useRef(true);
+  const uid = useId();
+  const sanitizedId = uid.replace(/:/g, '');
+  const pathId = `curve-${sanitizedId}`;
 
-  // Repeat text enough times to create a seamless infinite loop along the path
-  const repeatedText = `${marqueeText} `.repeat(12);
+  const startY = 40;
+  const pathD = `M-100,${startY} Q500,${startY + curveAmount} 1540,${startY}`;
+  const apexY = startY + curveAmount * 0.5;
+  const viewBoxHeight = Math.max(140, Math.ceil(apexY + 85));
 
-  // Direction coefficient
-  const dirCoeff = direction === 'right' ? 1 : -1;
+  const dragRef = useRef(false);
+  const lastXRef = useRef(0);
+  const dirRef = useRef(direction);
+  const velRef = useRef(0);
 
   useEffect(() => {
-    // Intersection Observer to stop animation when out of view
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
-      },
-      { threshold: 0.05 }
-    );
+    dirRef.current = direction;
+  }, [direction]);
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
+  const textLength = spacing;
+  const totalText = textLength
+    ? Array(Math.ceil(2400 / textLength) + 3)
+        .fill(text)
+        .join('')
+    : text;
+  const ready = spacing > 0;
 
-    let lastTime = performance.now();
-
-    const loop = (currentTime: number) => {
-      const delta = (currentTime - lastTime) / 1000;
-      lastTime = currentTime;
-
-      if (isVisibleRef.current) {
-        // Base speed scaled by interactive multiplier
-        const currentSpeed = speed * 12 * speedMultiplierRef.current * dirCoeff;
-        offsetRef.current = (offsetRef.current + currentSpeed * delta) % 1000;
-        setOffset(offsetRef.current);
-
-        // Smoothly decay interactive speed back to 1
-        if (speedMultiplierRef.current > 1) {
-          speedMultiplierRef.current = Math.max(1, speedMultiplierRef.current - delta * 3);
-        } else if (speedMultiplierRef.current < 1) {
-          speedMultiplierRef.current = Math.min(1, speedMultiplierRef.current + delta * 3);
-        }
+  useEffect(() => {
+    const updateSpacing = () => {
+      if (measureRef.current) {
+        setSpacing(measureRef.current.getComputedTextLength());
       }
-
-      animFrameRef.current = requestAnimationFrame(loop);
     };
 
-    animFrameRef.current = requestAnimationFrame(loop);
+    updateSpacing();
 
-    return () => {
-      observer.disconnect();
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    if (typeof document !== 'undefined' && document.fonts?.ready) {
+      document.fonts.ready.then(updateSpacing);
+    }
+  }, [text, className]);
+
+  useEffect(() => {
+    if (!spacing) return;
+    if (textPathRef.current) {
+      const initial = -spacing;
+      textPathRef.current.setAttribute('startOffset', initial + 'px');
+      setOffset(initial);
+    }
+  }, [spacing]);
+
+  useEffect(() => {
+    if (!spacing || !ready) return;
+    let frame = 0;
+    const step = () => {
+      if (!dragRef.current && textPathRef.current) {
+        const delta = dirRef.current === 'right' ? speed : -speed;
+        const currentOffset = parseFloat(textPathRef.current.getAttribute('startOffset') || '0');
+        let newOffset = currentOffset + delta;
+
+        const wrapPoint = spacing;
+        if (newOffset <= -wrapPoint) newOffset += wrapPoint;
+        if (newOffset > 0) newOffset -= wrapPoint;
+
+        textPathRef.current.setAttribute('startOffset', newOffset + 'px');
+        setOffset(newOffset);
+      }
+      frame = requestAnimationFrame(step);
     };
-  }, [speed, dirCoeff]);
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [spacing, speed, ready]);
 
-  // Interactive mouse move speed boost
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!interactive) return;
-    const movement = Math.abs(e.movementX) || 1;
-    speedMultiplierRef.current = Math.min(3.5, 1 + movement * 0.15);
+    dragRef.current = true;
+    lastXRef.current = e.clientX;
+    velRef.current = 0;
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {}
   };
 
-  // Generate smooth curved quadratic bezier path based on curveAmount
-  const width = 1440;
-  const height = 180;
-  const startY = height * 0.3;
-  const controlY = startY + (curveAmount * 0.45);
-  const endY = startY;
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!interactive || !dragRef.current || !textPathRef.current) return;
+    const dx = e.clientX - lastXRef.current;
+    lastXRef.current = e.clientX;
+    velRef.current = dx;
 
-  const pathD = `M -200,${startY} Q ${width / 2},${controlY} ${width + 200},${endY}`;
+    const currentOffset = parseFloat(textPathRef.current.getAttribute('startOffset') || '0');
+    let newOffset = currentOffset + dx;
+
+    const wrapPoint = spacing;
+    if (newOffset <= -wrapPoint) newOffset += wrapPoint;
+    if (newOffset > 0) newOffset -= wrapPoint;
+
+    textPathRef.current.setAttribute('startOffset', newOffset + 'px');
+    setOffset(newOffset);
+  };
+
+  const endDrag = (e?: React.PointerEvent<HTMLDivElement>) => {
+    if (!interactive) return;
+    dragRef.current = false;
+    dirRef.current = velRef.current > 0 ? 'right' : 'left';
+    if (e && e.currentTarget && e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch {}
+    }
+  };
+
+  const cursorStyle = interactive ? (dragRef.current ? 'grabbing' : 'grab') : 'auto';
 
   return (
     <div
-      ref={containerRef}
-      className={`curved-loop-wrapper ${className}`}
-      onMouseMove={handleMouseMove}
-      style={{
-        width: '100%',
-        overflow: 'hidden',
-        position: 'relative',
-        userSelect: 'none',
-        cursor: interactive ? 'grab' : 'default'
-      }}
+      className="curved-loop-jacket"
+      style={{ visibility: ready ? 'visible' : 'hidden', cursor: cursorStyle, ...style }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endDrag}
+      onPointerLeave={endDrag}
     >
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        preserveAspectRatio="xMidYMid meet"
-        className="curved-loop-svg"
-        style={{
-          width: '100%',
-          height: 'auto',
-          display: 'block',
-          overflow: 'visible'
-        }}
-      >
-        <defs>
-          <path id={pathId} d={pathD} fill="none" />
-        </defs>
-
-        <text
-          fill={textColor}
-          style={{
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-            fontFamily: 'var(--font-sans)',
-            letterSpacing: '0.04em',
-            textTransform: 'uppercase'
-          }}
-        >
-          <textPath
-            href={`#${pathId}`}
-            startOffset={`${offset}px`}
-            style={{
-              willChange: 'startOffset'
-            }}
-          >
-            {repeatedText}
-          </textPath>
+      <svg className="curved-loop-svg" viewBox={`0 -30 1440 ${viewBoxHeight}`}>
+        <text ref={measureRef} xmlSpace="preserve" style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}>
+          {text}
         </text>
+        <defs>
+          <path ref={pathRef} id={pathId} d={pathD} fill="none" stroke="transparent" />
+        </defs>
+        {ready && (
+          <text fontWeight="bold" xmlSpace="preserve" className={className}>
+            <textPath ref={textPathRef} href={`#${pathId}`} startOffset={offset + 'px'} xmlSpace="preserve">
+              {totalText}
+            </textPath>
+          </text>
+        )}
       </svg>
-
-      <style jsx>{`
-        .curved-loop-wrapper {
-          padding: 20px 0 10px;
-        }
-
-        .curved-loop-svg {
-          pointer-events: none;
-        }
-
-        @media (max-width: 768px) {
-          .curved-loop-wrapper {
-            padding: 10px 0 0;
-          }
-        }
-      `}</style>
     </div>
   );
-}
+};
+
+export default CurvedLoop;

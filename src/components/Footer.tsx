@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { triggerConfetti } from '@/lib/confetti';
 import SmoothInput from './SmoothInput';
+import CurvedLoop from './CurvedLoop';
 import styles from './Footer.module.css';
 
 // Custom Discord Icon
@@ -89,6 +90,17 @@ export default function Footer() {
 
   return (
     <footer className={styles.siteFooter}>
+      {/* Interactive Curved Marquee Banner */}
+      <div className={styles.curvedBannerWrap}>
+        <CurvedLoop 
+          marqueeText="AMITY CODING CLUB ✦ BUILD ✦ LEARN ✦ SHIP ✦ CREATE TOMORROW ✦"
+          speed={2}
+          curveAmount={280}
+          direction="left"
+          interactive
+        />
+      </div>
+
       <div className="container">
         {/* Top Grid: Brand on Left, 4 Columns on Right */}
         <div className={styles.footerLayout}>
@@ -144,11 +156,6 @@ export default function Footer() {
               A community of student builders creating real-world impact through code.
             </p>
 
-            {/* Status Pill Badge */}
-            <div className={styles.footerStatusBadge}>
-              <span className={styles.statusIndicatorDot} />
-              <span className={styles.statusText}>ALL SYSTEMS OPERATIONAL</span>
-            </div>
           </div>
 
           {/* Right Columns Grid */}

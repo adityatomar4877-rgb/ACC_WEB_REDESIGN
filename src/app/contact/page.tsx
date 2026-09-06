@@ -1,9 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { triggerConfetti } from '@/lib/confetti';
 import SmoothInput from '@/components/SmoothInput';
+import TextType from '@/components/TextType';
+import StarBorder from '@/components/StarBorder';
+import { FaqAccordion } from '@/components/FaqAccordion';
+import styles from './ContactPage.module.css';
 import {
   Mail,
   Linkedin,
@@ -19,12 +24,19 @@ import {
   MessageSquare,
   ChevronDown,
   ArrowRight,
-  X,
   Radio,
   Github,
   Building2,
-  Compass
+  Zap,
+  Users,
+  Laptop
 } from 'lucide-react';
+
+interface FaqItem {
+  q: string;
+  a: string;
+  category: string;
+}
 
 export default function ContactPage() {
   // Form state
@@ -34,8 +46,11 @@ export default function ContactPage() {
   const [selectedTopic, setSelectedTopic] = useState('General Inquiry');
   const [customSubject, setCustomSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [isPriority, setIsPriority] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [ticketId, setTicketId] = useState('');
+  const [submissionTime, setSubmissionTime] = useState('');
 
   // Toast feedback state
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -43,31 +58,63 @@ export default function ContactPage() {
   // FAQ accordion state
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
+  // Live Campus Clock State
+  const [currentTime, setCurrentTime] = useState<string>('');
+  const [currentDate, setCurrentDate] = useState<string>('');
+
+  useEffect(() => {
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      });
+      const dateStr = now.toLocaleDateString('en-US', {
+        timeZone: 'Asia/Kolkata',
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      });
+      setCurrentTime(timeStr);
+      setCurrentDate(dateStr);
+    }
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const topics = [
-    'General Inquiry',
-    'SIH & Hackathons',
-    'Sponsorship / Partnership',
-    'Speaker / Workshop',
-    'Club Membership'
+    { label: 'General Inquiry', icon: MessageSquare },
+    { label: 'Hackathon & SIH', icon: Zap },
+    { label: 'Sponsorship / Partner', icon: Building2 },
+    { label: 'Speaker / Workshop', icon: Laptop },
+    { label: 'Club Membership', icon: Users },
   ];
 
-  const faqs = [
+  const faqs: FaqItem[] = [
     {
+      category: 'SLA & RESPONSE',
       q: 'How fast does the ACC leadership team reply?',
-      a: 'We review inbound emails and inquiry submissions daily. You will typically hear back from our communications lead or relevant domain coordinator within 2 to 6 hours during weekdays.'
+      a: 'We monitor inbound communications continuously. For standard inquiries, our domain coordinators reply within 2 to 6 hours during weekdays. Priority hackathon and corporate partnership requests are escalated immediately to executive leads.',
     },
     {
-      q: 'How can our company or startup sponsor ACC events?',
-      a: 'We partner with leading tech companies, dev tooling providers, and cloud platforms for hackathons, prizes, and sponsored bootcamps. Select "Sponsorship / Partnership" in the form or email us directly at amitycodingclub@gmail.com.'
+      category: 'PARTNERSHIPS',
+      q: 'How can companies or tech startups partner with ACC?',
+      a: 'We partner with cloud providers, dev tooling companies, and VC-backed startups for campus hackathons, bounties, and technical bootcamps. Select "Sponsorship / Partner" in the form or email our corporate relations desk directly.',
     },
     {
-      q: 'Can students from other colleges participate in ACC workshops & hackathons?',
-      a: 'Yes! Major events like our flagship annual Hackathon and open webinar sessions are open to students from all universities globally. Physical campus meetups may require prior registration badge clearance.'
+      category: 'ELIGIBILITY',
+      q: 'Can students from outside Amity University participate in ACC events?',
+      a: 'Yes! Major events including our flagship annual Hackathon, open developer bootcamps, and global webinars are open to developers worldwide. On-campus physical sessions require simple guest registration clearance.',
     },
     {
-      q: 'Where can I meet the team in person on campus?',
-      a: 'Our core team and mentors host open office hours from Monday to Friday, 3:30 PM to 7:00 PM at Amity University Gwalior campus, Innovation Block (Room E3-304).'
-    }
+      category: 'CAMPUS ACCESS',
+      q: 'Where can I meet the core engineering team on campus?',
+      a: 'Our core mentors and domain leads host open office hours from Monday to Friday, 3:30 PM to 7:00 PM at Amity University Gwalior campus, Innovation Block (Room E3-304). Drop by for code reviews, architecture discussions, or team matching.',
+    },
   ];
 
   const handleCopy = (text: string, label: string) => {
@@ -81,23 +128,31 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!firstName.trim() || !email.trim() || !message.trim()) {
-      alert('Please fill in all required fields (First Name, Email, and Message).');
+      alert('Please complete all required fields (First Name, Email, and Message).');
       return;
     }
 
     setIsSubmitting(true);
 
     setTimeout(() => {
+      const generatedTicket = `ACC-COMM-${Math.floor(1000 + Math.random() * 9000)}`;
+      const now = new Date().toLocaleTimeString('en-US', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      setTicketId(generatedTicket);
+      setSubmissionTime(`${now} IST`);
       setIsSubmitting(false);
       setIsSubmitted(true);
 
       triggerConfetti({
-        particleCount: 90,
+        particleCount: 80,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#5B3DF5', '#F5B51B', '#3B82F6', '#10B981']
+        colors: ['#5B3DF5', '#A855F7', '#F59E0B', '#10B981'],
       });
-    }, 800);
+    }, 700);
   };
 
   const handleResetForm = () => {
@@ -107,167 +162,250 @@ export default function ContactPage() {
     setSelectedTopic('General Inquiry');
     setCustomSubject('');
     setMessage('');
+    setIsPriority(false);
     setIsSubmitted(false);
   };
 
   return (
-    <div className="contact-page">
-      {/* 01. Subpage Hero Section (Consistent with About, Events, Projects, Team) */}
-      <section className="subpage-hero contact-hero">
+    <div className={styles.contactPage}>
+      {/* Ambient Radial Background & Grid */}
+      <div className={styles.ambientBackdrop}>
+        <div className={styles.ambientGlow1} />
+        <div className={styles.ambientGlow2} />
+        <div className={styles.ambientGridPattern} />
+      </div>
+
+      {/* 01. Subpage Hero Section */}
+      <section className={styles.heroSection} aria-label="Contact Overview">
         <div className="container">
-          <div className="section-meta">
-            <Sparkles size={13} className="meta-icon" />
-            <span>REACH OUT &amp; CONNECT</span>
+          <div className={styles.heroContent}>
+            <div className={styles.metaBadge}>
+              <span className={styles.livePulseDot} />
+              <span>04 / COMMUNICATION NEXUS • CHANNELS ACTIVE</span>
+            </div>
+
+            <div className={styles.heroTitleWrapper}>
+              <TextType
+                as="h1"
+                className={styles.heroHeadline}
+                text={[
+                  "Let's build something exceptional.",
+                  "Inquire about hackathons & sponsorships.",
+                  "Collaborate on research & open-source.",
+                  "Connect with Amity's top engineers."
+                ]}
+                typingSpeed={65}
+                pauseDuration={1800}
+                deletingSpeed={45}
+                showCursor
+                cursorCharacter="_"
+                cursorBlinkDuration={0.5}
+                startOnVisible
+              />
+            </div>
+
+            <p className={styles.heroLead}>
+              Whether you want to sponsor our next hackathon, partner on engineering research, propose a workshop, or join our core guild — our transmission line is always open.
+            </p>
           </div>
-          <h1 className="subpage-hero-title">
-            Contact <span className="title-accent">Us</span>
-          </h1>
-          <p className="subpage-hero-lead">
-            Have questions or need support? We&apos;re here to help. Reach out and we&apos;ll get back to you as soon as possible.
-          </p>
         </div>
       </section>
 
-      {/* 03. Main Two-Column Content Grid */}
-      <section className="contact-body-section">
+      {/* 02. Main Two-Column Grid */}
+      <section className={styles.mainSection} aria-label="Contact Channels & Transmission Form">
         <div className="container">
-          <div className="contact-grid-layout">
+          <div className={styles.mainGrid}>
             
-            {/* LEFT COLUMN: Message Form Card */}
-            <div className="form-card-container">
-              <div className="content-card form-box-card">
-                <div className="form-card-header">
-                  <div>
-                    <h2 className="form-heading">Send us a message</h2>
-                    <p className="form-subheading">Fill in the details below and we&apos;ll respond to your email.</p>
-                  </div>
-                  <div className="sla-pill" title="Average response time during active hours">
-                    <span className="sla-dot" />
-                    <span>Avg reply: &lt; 2 hrs</span>
-                  </div>
-                </div>
+            {/* LEFT COLUMN: The Transmission Form Card with StarBorder */}
+            <StarBorder
+              as="div"
+              color="#A855F7"
+              speed="5s"
+              thickness={1.5}
+              borderRadius={24}
+              className={styles.formStarWrap}
+              contentClassName={styles.formCard}
+            >
 
-                {isSubmitted ? (
-                  <div className="success-state-container">
-                    <div className="success-icon-wrap">
-                      <CheckCircle2 size={40} />
+              <div className={styles.formHeader}>
+                <div>
+                  <h2 className={styles.formTitle}>Transmit a Message</h2>
+                  <p className={styles.formDesc}>
+                    Your submission is routed immediately to the active domain lead.
+                  </p>
+                </div>
+                <div className={styles.slaBadge}>
+                  <span className={styles.slaDot} />
+                  <span>SLA: &lt; 2h</span>
+                </div>
+              </div>
+
+              {isSubmitted ? (
+                /* Submission Confirmed Receipt Card */
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4 }}
+                  className={styles.receiptCard}
+                >
+                  <div className={styles.receiptIconWrap}>
+                    <CheckCircle2 size={36} />
+                  </div>
+                  <h3 className={styles.receiptTitle}>Transmission Confirmed</h3>
+                  <p className={styles.receiptLead}>
+                    Thank you, <strong>{firstName}</strong>. Your note regarding &ldquo;{customSubject || selectedTopic}&rdquo; has been logged into the ACC dispatch pipeline.
+                  </p>
+
+                  <div className={styles.receiptTelemetryBox}>
+                    <div className={styles.receiptRow}>
+                      <span className={styles.receiptLabel}>Reference ID</span>
+                      <span className={styles.receiptValue}>{ticketId}</span>
                     </div>
-                    <h3 className="success-heading">Message Sent Successfully!</h3>
-                    <p className="success-desc">
-                      Thank you, <strong>{firstName}</strong>. Your note regarding <em>&ldquo;{customSubject || selectedTopic}&rdquo;</em> has been transmitted to the ACC leadership desk.
-                    </p>
-                    <div className="success-meta-box">
-                      <div className="meta-line">
-                        <span className="m-label">Sender:</span>
-                        <span className="m-val">{firstName} {lastName} ({email})</span>
-                      </div>
-                      <div className="meta-line">
-                        <span className="m-label">Category:</span>
-                        <span className="m-val">{selectedTopic}</span>
-                      </div>
-                      <div className="meta-line">
-                        <span className="m-label">Status:</span>
-                        <span className="m-val status-green">● Queued for Coordinator Review</span>
-                      </div>
+                    <div className={styles.receiptRow}>
+                      <span className={styles.receiptLabel}>Sender</span>
+                      <span className={styles.receiptValue}>{firstName} {lastName} ({email})</span>
                     </div>
+                    <div className={styles.receiptRow}>
+                      <span className={styles.receiptLabel}>Domain Queue</span>
+                      <span className={styles.receiptValue}>{selectedTopic}</span>
+                    </div>
+                    <div className={styles.receiptRow}>
+                      <span className={styles.receiptLabel}>Logged Timestamp</span>
+                      <span className={styles.receiptValue}>{submissionTime}</span>
+                    </div>
+                    <div className={styles.receiptRow}>
+                      <span className={styles.receiptLabel}>Dispatch Status</span>
+                      <span className={styles.receiptQueueStatus}>● Queued for Coordinator Review</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.receiptActions}>
                     <button
                       type="button"
-                      className="btn btn-secondary btn-full"
+                      className={styles.secondaryBtn}
+                      onClick={() => handleCopy(ticketId, 'ticket')}
+                    >
+                      {copiedField === 'ticket' ? (
+                        <>
+                          <Check size={14} className="text-emerald" />
+                          <span>Copied Reference ID</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={14} />
+                          <span>Copy Reference ID</span>
+                        </>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.submitBtn}
                       onClick={handleResetForm}
                     >
-                      Send Another Message
+                      Send Another Note
                     </button>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="message-form">
-                    {/* Name Fields Row */}
-                    <div className="form-double-row">
-                      <div className="form-field-wrap">
-                        <label htmlFor="firstName" className="field-label">
-                          First Name <span className="required-star">*</span>
-                        </label>
-                        <SmoothInput
-                          id="firstName"
-                          type="text"
-                          required
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          placeholder="Your first name"
-                          className="field-input"
-                        />
-                      </div>
-                      <div className="form-field-wrap">
-                        <label htmlFor="lastName" className="field-label">
-                          Last Name <span className="required-star">*</span>
-                        </label>
-                        <SmoothInput
-                          id="lastName"
-                          type="text"
-                          required
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          placeholder="Your last name"
-                          className="field-input"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Email Field */}
-                    <div className="form-field-wrap">
-                      <label htmlFor="email" className="field-label">
-                        Email Address <span className="required-star">*</span>
-                      </label>
-                      <SmoothInput
-                        id="email"
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="your.email@example.com"
-                        className="field-input"
-                      />
-                    </div>
-
-                    {/* Topic / Category Selection */}
-                    <div className="form-field-wrap">
-                      <label className="field-label">Topic / Category</label>
-                      <div className="category-pill-group">
-                        {topics.map((t) => (
+                </motion.div>
+              ) : (
+                /* Interactive Form */
+                <form onSubmit={handleSubmit} className={styles.formFields}>
+                  
+                  {/* Category Selection Tabs */}
+                  <div className={styles.categorySection}>
+                    <span className={styles.sectionSublabel}>Select Communication Domain</span>
+                    <div className={styles.categoryGrid}>
+                      {topics.map((t) => {
+                        const IconComponent = t.icon;
+                        const isSelected = selectedTopic === t.label;
+                        return (
                           <button
                             type="button"
-                            key={t}
-                            className={`topic-select-pill ${selectedTopic === t ? 'selected' : ''}`}
-                            onClick={() => setSelectedTopic(t)}
+                            key={t.label}
+                            className={`${styles.categoryPill} ${isSelected ? styles.categoryPillActive : ''}`}
+                            onClick={() => setSelectedTopic(t.label)}
                           >
-                            {t}
+                            <IconComponent size={13} />
+                            <span>{t.label}</span>
                           </button>
-                        ))}
-                      </div>
+                        );
+                      })}
                     </div>
+                  </div>
 
-                    {/* Subject Field */}
-                    <div className="form-field-wrap">
-                      <label htmlFor="subject" className="field-label">
-                        Subject <span className="field-optional">(Optional)</span>
+                  {/* Name Fields */}
+                  <div className={styles.doubleFieldRow}>
+                    <div className={styles.fieldGroup}>
+                      <label htmlFor="firstName" className={styles.fieldLabel}>
+                        First Name <span className={styles.requiredStar}>*</span>
                       </label>
                       <SmoothInput
-                        id="subject"
+                        id="firstName"
                         type="text"
-                        value={customSubject}
-                        onChange={(e) => setCustomSubject(e.target.value)}
-                        placeholder="What is this regarding?"
+                        required
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="Ada"
                         className="field-input"
                       />
                     </div>
+                    <div className={styles.fieldGroup}>
+                      <label htmlFor="lastName" className={styles.fieldLabel}>
+                        Last Name <span className={styles.optionalTag}>(Optional)</span>
+                      </label>
+                      <SmoothInput
+                        id="lastName"
+                        type="text"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        placeholder="Lovelace"
+                        className="field-input"
+                      />
+                    </div>
+                  </div>
 
-                    {/* Message Field */}
-                    <div className="form-field-wrap">
-                      <div className="field-label-split">
-                        <label htmlFor="message" className="field-label">
-                          Message <span className="required-star">*</span>
-                        </label>
-                        <span className="message-counter">{message.length} / 1200</span>
-                      </div>
+                  {/* Email Field */}
+                  <div className={styles.fieldGroup}>
+                    <label htmlFor="email" className={styles.fieldLabel}>
+                      Email Address <span className={styles.requiredStar}>*</span>
+                    </label>
+                    <SmoothInput
+                      id="email"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="ada@lovelace.dev"
+                      className="field-input"
+                    />
+                  </div>
+
+                  {/* Custom Subject */}
+                  <div className={styles.fieldGroup}>
+                    <div className={styles.fieldLabelRow}>
+                      <label htmlFor="subject" className={styles.fieldLabel}>
+                        Subject Headline
+                      </label>
+                      <span className={styles.optionalTag}>Optional</span>
+                    </div>
+                    <SmoothInput
+                      id="subject"
+                      type="text"
+                      value={customSubject}
+                      onChange={(e) => setCustomSubject(e.target.value)}
+                      placeholder={`e.g. Question regarding ${selectedTopic}`}
+                      className="field-input"
+                    />
+                  </div>
+
+                  {/* Message Field with Character Counter */}
+                  <div className={styles.fieldGroup}>
+                    <div className={styles.fieldLabelRow}>
+                      <label htmlFor="message" className={styles.fieldLabel}>
+                        Message Transmission <span className={styles.requiredStar}>*</span>
+                      </label>
+                      <span className={styles.charCounter}>{message.length} / 1200</span>
+                    </div>
+                    <div className={styles.textareaWrap}>
                       <textarea
                         id="message"
                         required
@@ -275,61 +413,130 @@ export default function ContactPage() {
                         maxLength={1200}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Write your question, partnership proposal, or feedback here..."
-                        className="field-textarea"
+                        placeholder="Provide details about your project, hackathon sponsorship, or technical inquiry..."
+                        className={styles.customTextarea}
                       />
                     </div>
-
-                    {/* Submit Button */}
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className={`btn btn-primary btn-submit ${isSubmitting ? 'disabled' : ''}`}
-                    >
-                      {isSubmitting ? (
-                        <span className="submit-loading-flex">
-                          <span className="btn-spinner" />
-                          <span>Sending message...</span>
-                        </span>
-                      ) : (
-                        <>
-                          <span>Send Message</span>
-                          <Send size={15} className="btn-send-icon" />
-                        </>
-                      )}
-                    </button>
-                  </form>
-                )}
-              </div>
-            </div>
-
-            {/* RIGHT COLUMN: Contact Channels & Location Cards */}
-            <div className="contact-channels-container">
-              
-              {/* 1. Email Card */}
-              <div className="channel-box email-box">
-                <div className="channel-icon-pill icon-bg-red">
-                  <Mail size={20} />
-                </div>
-                <div className="channel-info">
-                  <div className="channel-heading-row">
-                    <h3 className="channel-name">Email</h3>
-                    <span className="channel-badge">Official</span>
                   </div>
-                  <a
-                    href="mailto:amitycodingclub@gmail.com"
-                    className="channel-link email-link"
+
+                  {/* Time-Sensitive Priority Toggle */}
+                  <div className={styles.priorityToggleBar}>
+                    <div className={styles.priorityInfo}>
+                      <span className={styles.priorityTitle}>Time-Sensitive Inquiry</span>
+                      <span className={styles.prioritySub}>Flag for immediate review by executive leads</span>
+                    </div>
+                    <label className={styles.switchToggle} aria-label="Toggle Time-Sensitive Priority">
+                      <input
+                        type="checkbox"
+                        checked={isPriority}
+                        onChange={(e) => setIsPriority(e.target.checked)}
+                      />
+                      <span className={styles.switchSlider} />
+                    </label>
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={styles.submitBtn}
                   >
-                    amitycodingclub@gmail.com
-                  </a>
-                  <p className="channel-caption">For collaborations, event inquiries &amp; official notes</p>
+                    {isSubmitting ? (
+                      <>
+                        <span className={styles.spinnerIcon}>
+                          <Zap size={16} />
+                        </span>
+                        <span>Transmitting Note...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Transmit Message</span>
+                        <Send size={15} />
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </StarBorder>
+
+            {/* RIGHT COLUMN: Frequency Hubs & Live Telemetry */}
+            <div className={styles.channelDeck}>
+              
+              {/* 1. Live Telemetry Clock & Lab Status Card */}
+              <StarBorder
+                as="div"
+                color="#10B981"
+                speed="6s"
+                thickness={1.5}
+                borderRadius={20}
+                className={styles.cardStarWrap}
+                contentClassName={styles.clockWidgetCard}
+              >
+                <div className={styles.clockTopRow}>
+                  <div className={styles.clockCityTag}>
+                    <Radio size={13} className={styles.livePulseDot} />
+                    <span>GWALIOR LAB • TELEMETRY</span>
+                  </div>
+                  <div className={styles.liveBeaconWrap}>
+                    <span className={styles.livePulseDot} />
+                    <span>ACTIVE</span>
+                  </div>
                 </div>
-                <div className="channel-btn-group">
+
+                <div className={styles.clockDigitalDisplay}>
+                  {currentTime || '12:00:00 PM'}
+                </div>
+                <div className={styles.clockZoneText}>
+                  {currentDate ? `${currentDate} • India Standard Time (UTC+05:30)` : 'India Standard Time (UTC+05:30)'}
+                </div>
+
+                <div className={styles.clockDivider} />
+
+                <div className={styles.labStatusFlex}>
+                  <Building2 size={16} className={styles.labIcon} />
+                  <span>Innovation Lab Room E3-304 • Open for walk-ins (3:30 - 7:00 PM IST)</span>
+                </div>
+              </StarBorder>
+
+              {/* 2. Official Email Desk Card */}
+              <StarBorder
+                as="div"
+                color="#EF4444"
+                speed="5s"
+                thickness={1.5}
+                borderRadius={18}
+                className={styles.cardStarWrap}
+                contentClassName={styles.channelTile}
+              >
+                <div className={styles.channelTileHeader}>
+                  <div className={styles.channelIdentity}>
+                    <div className={`${styles.channelIconBox} ${styles.iconEmail}`}>
+                      <Mail size={18} />
+                    </div>
+                    <div>
+                      <h3 className={styles.channelName}>Official Email</h3>
+                      <span className={styles.channelTag}>Direct Dispatch</span>
+                    </div>
+                  </div>
+                  <span className={styles.channelBadge}>Primary</span>
+                </div>
+
+                <a
+                  href="mailto:amitycodingclub@gmail.com"
+                  className={styles.channelLink}
+                >
+                  amitycodingclub@gmail.com
+                </a>
+                <p className={styles.channelSubdesc}>
+                  Monitored continuously for official university partnerships, hackathon sponsorships, and guest sessions.
+                </p>
+
+                <div className={styles.channelActionRow}>
                   <button
                     type="button"
-                    className="channel-action-btn copy-action"
+                    className={styles.channelBtn}
                     onClick={() => handleCopy('amitycodingclub@gmail.com', 'email')}
-                    title="Copy email to clipboard"
+                    title="Copy Email Address"
                   >
                     {copiedField === 'email' ? (
                       <>
@@ -345,997 +552,195 @@ export default function ContactPage() {
                   </button>
                   <a
                     href="mailto:amitycodingclub@gmail.com"
-                    className="channel-action-btn write-action"
-                    title="Compose email"
+                    className={`${styles.channelBtn} ${styles.channelBtnPrimary}`}
                   >
-                    <span>Write</span>
+                    <span>Write Email</span>
                     <ExternalLink size={12} />
                   </a>
                 </div>
-              </div>
+              </StarBorder>
 
-              {/* 2. LinkedIn Card */}
-              <div className="channel-box linkedin-box">
-                <div className="channel-icon-pill icon-bg-blue">
-                  <Linkedin size={20} />
-                </div>
-                <div className="channel-info">
-                  <div className="channel-heading-row">
-                    <h3 className="channel-name">LinkedIn</h3>
-                    <span className="channel-badge">Network</span>
+              {/* 3. Campus Coordinates & Headquarters Card */}
+              <StarBorder
+                as="div"
+                color="#3B82F6"
+                speed="6.5s"
+                thickness={1.5}
+                borderRadius={18}
+                className={styles.cardStarWrap}
+                contentClassName={styles.channelTile}
+              >
+                <div className={styles.channelTileHeader}>
+                  <div className={styles.channelIdentity}>
+                    <div className={`${styles.channelIconBox} ${styles.iconLocation}`}>
+                      <MapPin size={18} />
+                    </div>
+                    <div>
+                      <h3 className={styles.channelName}>Campus Headquarters</h3>
+                      <span className={styles.channelTag}>26°13&apos;06&quot;N 78°10&apos;58&quot;E</span>
+                    </div>
                   </div>
-                  <a
-                    href="https://linkedin.com/company/amity-coding-club"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="channel-link"
-                  >
-                    /company/amity-coding-club
-                  </a>
-                  <p className="channel-caption">Professional updates, hackathon recaps &amp; internships</p>
+                  <span className={styles.channelBadge}>Campus Hub</span>
                 </div>
-                <div className="channel-btn-group">
-                  <a
-                    href="https://linkedin.com/company/amity-coding-club"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="channel-action-btn write-action"
-                  >
-                    <span>Visit</span>
-                    <ExternalLink size={12} />
-                  </a>
-                </div>
-              </div>
 
-              {/* 3. Instagram Card */}
-              <div className="channel-box instagram-box">
-                <div className="channel-icon-pill icon-bg-pink">
-                  <Instagram size={20} />
-                </div>
-                <div className="channel-info">
-                  <div className="channel-heading-row">
-                    <h3 className="channel-name">Instagram</h3>
-                    <span className="channel-badge">Social</span>
-                  </div>
-                  <a
-                    href="https://instagram.com/amitycodingclub"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="channel-link"
-                  >
-                    @amitycodingclub
-                  </a>
-                  <p className="channel-caption">Workshop reels, event photos &amp; student spotlights</p>
-                </div>
-                <div className="channel-btn-group">
-                  <a
-                    href="https://instagram.com/amitycodingclub"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="channel-action-btn write-action"
-                  >
-                    <span>Follow</span>
-                    <ExternalLink size={12} />
-                  </a>
-                </div>
-              </div>
+                <address className={styles.channelAddressText}>
+                  Opposite Airport, Maharajpura,<br />
+                  Gwalior, Madhya Pradesh 474005<br />
+                  <span style={{ color: 'var(--ink-secondary)', fontSize: '0.8rem' }}>Innovation Block • Room E3-304</span>
+                </address>
 
-              {/* 4. Address & Campus Card */}
-              <div className="channel-box address-box">
-                <div className="channel-icon-pill icon-bg-emerald">
-                  <MapPin size={20} />
-                </div>
-                <div className="channel-info">
-                  <div className="channel-heading-row">
-                    <h3 className="channel-name">Address</h3>
-                    <span className="channel-badge">Campus Hub</span>
-                  </div>
-                  <address className="channel-address">
-                    Opposite Airport, Maharajpura,<br />
-                    Gwalior, Madhya Pradesh 474005
-                  </address>
-                  <p className="channel-caption">Amity University Campus • Innovation Block Room E3-304</p>
-                </div>
-                <div className="channel-btn-group">
+                <div className={styles.channelActionRow}>
                   <a
                     href="https://maps.google.com/?q=Amity+University+Gwalior+Madhya+Pradesh"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="channel-action-btn write-action"
+                    className={`${styles.channelBtn} ${styles.channelBtnPrimary}`}
                   >
-                    <span>Maps</span>
+                    <span>Open in Google Maps</span>
                     <ExternalLink size={12} />
                   </a>
                 </div>
-              </div>
+              </StarBorder>
 
-              {/* 5. Live Discord & GitHub Banner (ACC Theme Accent) */}
-              <div className="developer-hub-card">
-                <div className="dev-hub-top">
-                  <div className="dev-hub-title-group">
-                    <Radio size={16} className="dev-radio-icon" />
-                    <h4>Developer Community</h4>
+              {/* 4. Executive Professional Networks (LinkedIn & Instagram) */}
+              <StarBorder
+                as="div"
+                color="#0A66C2"
+                speed="6s"
+                thickness={1.5}
+                borderRadius={18}
+                className={styles.cardStarWrap}
+                contentClassName={styles.channelTile}
+              >
+                <div className={styles.channelTileHeader}>
+                  <div className={styles.channelIdentity}>
+                    <div className={`${styles.channelIconBox} ${styles.iconLinkedIn}`}>
+                      <Linkedin size={18} />
+                    </div>
+                    <div>
+                      <h3 className={styles.channelName}>LinkedIn Network</h3>
+                      <span className={styles.channelTag}>Professional Updates</span>
+                    </div>
                   </div>
-                  <span className="dev-online-tag">● 1,200+ Members Online</span>
+                  <a
+                    href="https://linkedin.com/company/amity-coding-club"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.channelBtn}
+                    style={{ flex: 'none', padding: '6px 12px' }}
+                  >
+                    <span>Visit</span>
+                    <ExternalLink size={11} />
+                  </a>
                 </div>
-                <p className="dev-hub-text">
-                  Need instant coding help, peer code-reviews, or hackathon team matching? Join the conversation on Discord.
+              </StarBorder>
+
+              <StarBorder
+                as="div"
+                color="#E1306C"
+                speed="5.5s"
+                thickness={1.5}
+                borderRadius={18}
+                className={styles.cardStarWrap}
+                contentClassName={styles.channelTile}
+              >
+                <div className={styles.channelTileHeader}>
+                  <div className={styles.channelIdentity}>
+                    <div className={`${styles.channelIconBox} ${styles.iconInstagram}`}>
+                      <Instagram size={18} />
+                    </div>
+                    <div>
+                      <h3 className={styles.channelName}>Instagram</h3>
+                      <span className={styles.channelTag}>Stories &amp; Student Spotlights</span>
+                    </div>
+                  </div>
+                  <a
+                    href="https://instagram.com/amitycodingclub"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.channelBtn}
+                    style={{ flex: 'none', padding: '6px 12px' }}
+                  >
+                    <span>Follow</span>
+                    <ExternalLink size={11} />
+                  </a>
+                </div>
+              </StarBorder>
+
+              {/* 5. Live Developer Community Card (Discord & GitHub) */}
+              <StarBorder
+                as="div"
+                color="#818CF8"
+                speed="5s"
+                thickness={1.5}
+                borderRadius={20}
+                className={styles.cardStarWrap}
+                contentClassName={styles.devCommunityTile}
+              >
+                <div className={styles.devCommunityTop}>
+                  <div className={styles.devCommunityHeader}>
+                    <Radio size={16} className={styles.devRadioPulse} />
+                    <span>Developer Guild</span>
+                  </div>
+                  <span className={styles.devOnlineBadge}>● 1,200+ ONLINE</span>
+                </div>
+                <p className={styles.devCommunityDesc}>
+                  Need instant peer code-reviews, hackathon teammate matching, or open-source repo discussions? Join our Discord server.
                 </p>
-                <div className="dev-hub-buttons">
+                <div className={styles.devActionButtons}>
                   <a
                     href="https://discord.gg/amitycodingclub"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-discord-join"
+                    className={styles.discordJoinBtn}
                   >
-                    <MessageSquare size={15} />
-                    <span>Join Discord Server</span>
+                    <MessageSquare size={14} />
+                    <span>Join Discord</span>
                     <ArrowRight size={13} />
                   </a>
                   <a
                     href="https://github.com/amity-coding-club"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-github-view"
+                    className={styles.githubJoinBtn}
                   >
-                    <Github size={15} />
+                    <Github size={14} />
                     <span>GitHub</span>
                   </a>
                 </div>
-              </div>
+              </StarBorder>
 
             </div>
           </div>
         </div>
       </section>
 
-      {/* 04. FAQ Section */}
-      <section className="contact-faq-section">
+      {/* 03. Interactive FAQ Chat-Accordion Section */}
+      <section className={styles.faqSection} aria-label="Frequently Asked Questions">
         <div className="container">
-          <div className="faq-section-header">
-            <div className="section-meta center-meta">
-              <span>FREQUENTLY ASKED QUESTIONS</span>
+          <div className={styles.faqHeader}>
+            <div className={styles.metaBadge} style={{ margin: '0 auto 12px' }}>
+              <span>CLARIFICATIONS &amp; POLICIES</span>
             </div>
-            <h2 className="section-title">Everything you need to know.</h2>
-            <p className="section-description">
-              Common questions regarding hackathon sponsorships, response times, and campus visits.
+            <h2 className={styles.faqTitle}>Frequently Answered Questions</h2>
+            <p className={styles.faqLead}>
+              Detailed information on response SLAs, corporate sponsorships, workshop bookings, and campus access.
             </p>
           </div>
 
-          <div className="faq-container">
-            {faqs.map((faq, idx) => {
-              const isOpen = openFaq === idx;
-              return (
-                <div
-                  key={faq.q}
-                  className={`faq-card ${isOpen ? 'active' : ''}`}
-                >
-                  <button
-                    type="button"
-                    className="faq-toggle-button"
-                    onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    aria-expanded={isOpen}
-                  >
-                    <span className="faq-question-text">{faq.q}</span>
-                    <ChevronDown
-                      size={18}
-                      className={`faq-arrow ${isOpen ? 'open' : ''}`}
-                    />
-                  </button>
-                  {isOpen && (
-                    <div className="faq-answer-panel">
-                      <p>{faq.a}</p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Team Roster Link Callout */}
-          <div className="team-roster-box">
-            <div className="roster-callout-left">
-              <h3 className="roster-callout-title">Looking for specific domain mentors?</h3>
-              <p className="roster-callout-desc">
-                Meet our Core Leads in Systems, AI/ML, Modern Frontend, and Competitive Programming.
-              </p>
-            </div>
-            <Link href="/team" className="btn btn-secondary roster-callout-btn">
-              <span>View Team Roster</span>
-              <ArrowRight size={15} />
-            </Link>
-          </div>
+          <FaqAccordion
+            data={faqs.map((faq, idx) => ({
+              id: idx + 1,
+              category: faq.category,
+              question: faq.q,
+              answer: faq.a,
+              icon: idx === 0 ? '⚡' : idx === 1 ? '🤝' : idx === 2 ? '🎓' : '📍',
+              iconPosition: (idx % 2 === 0 ? 'left' : 'right') as 'left' | 'right',
+            }))}
+            timestamp="ACC Support Desk • Active 24/7"
+          />
         </div>
       </section>
-
-      {/* Scoped CSS Stylesheet (100% Theme Consistent with ACC Design System) */}
-      <style jsx>{`
-        .contact-page {
-          background-color: var(--canvas-primary);
-          color: var(--ink-primary);
-          min-height: 100vh;
-        }
-
-        /* 01. Subpage Hero */
-        .subpage-hero {
-          padding: 56px 0 40px;
-          background: var(--canvas-primary);
-          border-bottom: 1px solid var(--hairline-ultra-light);
-        }
-
-        .section-meta {
-          font-family: var(--font-mono);
-          font-size: 0.75rem;
-          font-weight: 600;
-          color: var(--accent-primary);
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          margin-bottom: 12px;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .meta-icon {
-          color: var(--accent-yellow-warm);
-        }
-
-        .center-meta {
-          justify-content: center;
-        }
-
-        .subpage-hero-title {
-          font-size: clamp(2.25rem, 4.5vw, 3.25rem);
-          font-weight: 800;
-          color: var(--ink-heading);
-          letter-spacing: -0.03em;
-          line-height: 1.15;
-          margin-bottom: 14px;
-        }
-
-        .title-accent {
-          color: var(--accent-primary);
-        }
-
-        .subpage-hero-lead {
-          font-size: 1.0625rem;
-          color: var(--ink-secondary);
-          line-height: 1.6;
-          max-width: 620px;
-        }
-
-        /* 03. Main Content Grid */
-        .contact-body-section {
-          padding: 40px 0 72px;
-          background: var(--canvas-secondary);
-        }
-
-        .contact-grid-layout {
-          display: grid;
-          grid-template-columns: 1.15fr 0.95fr;
-          gap: 32px;
-          align-items: start;
-        }
-
-        /* Content Card Styling */
-        .content-card {
-          background: var(--canvas-card);
-          border: 1px solid var(--hairline);
-          border-radius: var(--radius-xl);
-          padding: 36px;
-          box-shadow: var(--shadow-card);
-        }
-
-        .form-card-header {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 16px;
-          margin-bottom: 28px;
-          padding-bottom: 20px;
-          border-bottom: 1px solid var(--hairline-ultra-light);
-        }
-
-        .form-heading {
-          font-size: 1.375rem;
-          font-weight: 700;
-          color: var(--ink-heading);
-          letter-spacing: -0.02em;
-          margin-bottom: 4px;
-        }
-
-        .form-subheading {
-          font-size: 0.875rem;
-          color: var(--ink-secondary);
-          margin: 0;
-        }
-
-        .sla-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 5px 12px;
-          background: rgba(16, 185, 129, 0.08);
-          border: 1px solid rgba(16, 185, 129, 0.2);
-          border-radius: var(--radius-pill);
-          font-size: 0.75rem;
-          font-family: var(--font-mono);
-          font-weight: 600;
-          color: #059669;
-          white-space: nowrap;
-        }
-
-        .sla-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #10B981;
-        }
-
-        /* Form Controls */
-        .message-form {
-          display: flex;
-          flex-direction: column;
-          gap: 18px;
-        }
-
-        .form-double-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 16px;
-        }
-
-        .form-field-wrap {
-          display: flex;
-          flex-direction: column;
-          gap: 7px;
-        }
-
-        .field-label {
-          font-size: 0.8125rem;
-          font-weight: 600;
-          color: var(--ink-primary);
-        }
-
-        .required-star {
-          color: #EF4444;
-          margin-left: 2px;
-        }
-
-        .field-optional {
-          font-size: 0.75rem;
-          font-weight: 400;
-          color: var(--ink-muted);
-          margin-left: 4px;
-        }
-
-        .field-label-split {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .message-counter {
-          font-size: 0.75rem;
-          font-family: var(--font-mono);
-          color: var(--ink-muted);
-        }
-
-        .field-input,
-        .field-textarea {
-          width: 100%;
-          background: var(--canvas-subtle);
-          border: 1px solid var(--hairline-medium);
-          border-radius: var(--radius-md);
-          padding: 11px 14px;
-          font-size: 0.9375rem;
-          color: var(--ink-primary);
-          outline: none;
-          font-family: var(--font-sans);
-          transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-        }
-
-        .field-input::placeholder,
-        .field-textarea::placeholder {
-          color: var(--ink-subtle);
-        }
-
-        .field-input:focus,
-        .field-textarea:focus {
-          border-color: var(--accent-primary);
-          background: var(--canvas-card);
-          box-shadow: 0 0 0 3px var(--accent-purple-light);
-        }
-
-        .field-textarea {
-          resize: vertical;
-          min-height: 110px;
-          line-height: 1.5;
-        }
-
-        /* Topic Chips */
-        .category-pill-group {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 7px;
-        }
-
-        .topic-select-pill {
-          background: var(--canvas-subtle);
-          border: 1px solid var(--hairline);
-          color: var(--ink-secondary);
-          font-size: 0.8125rem;
-          font-weight: 500;
-          padding: 5px 12px;
-          border-radius: var(--radius-pill);
-          cursor: pointer;
-          transition: all var(--transition-fast);
-        }
-
-        .topic-select-pill:hover {
-          color: var(--ink-primary);
-          border-color: var(--ink-secondary);
-          background: var(--canvas-secondary);
-        }
-
-        .topic-select-pill.selected {
-          background: var(--accent-primary);
-          color: #FFFFFF;
-          border-color: var(--accent-primary);
-          box-shadow: 0 2px 8px rgba(91, 61, 245, 0.25);
-        }
-
-        .btn-submit {
-          margin-top: 8px;
-          width: 100%;
-          padding: 13px 20px;
-          border-radius: var(--radius-md);
-          font-size: 0.9375rem;
-          font-weight: 600;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          cursor: pointer;
-        }
-
-        .btn-send-icon {
-          transition: transform var(--transition-fast);
-        }
-
-        .btn-submit:hover .btn-send-icon {
-          transform: translateX(3px) translateY(-1px);
-        }
-
-        .btn-submit.disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-
-        .submit-loading-flex {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .btn-spinner {
-          width: 15px;
-          height: 15px;
-          border: 2px solid rgba(255, 255, 255, 0.35);
-          border-top-color: #FFFFFF;
-          border-radius: 50%;
-          animation: spin 0.6s linear infinite;
-        }
-
-        /* Success View */
-        .success-state-container {
-          padding: 24px 0 10px;
-          text-align: center;
-        }
-
-        .success-icon-wrap {
-          width: 64px;
-          height: 64px;
-          border-radius: 50%;
-          background: rgba(16, 185, 129, 0.1);
-          color: #10B981;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 16px;
-        }
-
-        .success-heading {
-          font-size: 1.375rem;
-          font-weight: 700;
-          color: var(--ink-heading);
-          margin-bottom: 8px;
-        }
-
-        .success-desc {
-          font-size: 0.9375rem;
-          color: var(--ink-secondary);
-          line-height: 1.55;
-          max-width: 440px;
-          margin: 0 auto 20px;
-        }
-
-        .success-meta-box {
-          background: var(--canvas-subtle);
-          border: 1px solid var(--hairline);
-          border-radius: var(--radius-md);
-          padding: 14px 18px;
-          margin-bottom: 24px;
-          text-align: left;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .meta-line {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          font-size: 0.8125rem;
-        }
-
-        .m-label {
-          color: var(--ink-muted);
-          font-family: var(--font-mono);
-        }
-
-        .m-val {
-          color: var(--ink-primary);
-          font-weight: 500;
-        }
-
-        .status-green {
-          color: #059669;
-          font-weight: 600;
-        }
-
-        .btn-full {
-          width: 100%;
-        }
-
-        /* RIGHT COLUMN: Contact Channels */
-        .contact-channels-container {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .channel-box {
-          background: var(--canvas-card);
-          border: 1px solid var(--hairline);
-          border-radius: var(--radius-lg);
-          padding: 18px 22px;
-          display: grid;
-          grid-template-columns: auto 1fr auto;
-          gap: 16px;
-          align-items: center;
-          box-shadow: var(--shadow-subtle);
-          transition: all var(--transition-fast);
-        }
-
-        .channel-box:hover {
-          border-color: rgba(17, 24, 39, 0.18);
-          box-shadow: var(--shadow-card);
-          transform: translateY(-1px);
-        }
-
-        .channel-icon-pill {
-          width: 44px;
-          height: 44px;
-          border-radius: var(--radius-md);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .icon-bg-red {
-          background: rgba(239, 68, 68, 0.08);
-          color: #DC2626;
-          border: 1px solid rgba(239, 68, 68, 0.18);
-        }
-
-        .icon-bg-blue {
-          background: rgba(10, 102, 194, 0.08);
-          color: #0A66C2;
-          border: 1px solid rgba(10, 102, 194, 0.18);
-        }
-
-        .icon-bg-pink {
-          background: rgba(225, 48, 108, 0.08);
-          color: #E1306C;
-          border: 1px solid rgba(225, 48, 108, 0.18);
-        }
-
-        .icon-bg-emerald {
-          background: rgba(16, 185, 129, 0.08);
-          color: #059669;
-          border: 1px solid rgba(16, 185, 129, 0.18);
-        }
-
-        .channel-info {
-          overflow: hidden;
-        }
-
-        .channel-heading-row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-bottom: 2px;
-        }
-
-        .channel-name {
-          font-size: 0.9375rem;
-          font-weight: 700;
-          color: var(--ink-heading);
-          margin: 0;
-        }
-
-        .channel-badge {
-          font-size: 0.625rem;
-          font-family: var(--font-mono);
-          text-transform: uppercase;
-          background: var(--canvas-subtle);
-          color: var(--ink-secondary);
-          padding: 1px 6px;
-          border-radius: 4px;
-          font-weight: 600;
-        }
-
-        .channel-link {
-          display: block;
-          font-size: 0.9375rem;
-          font-weight: 600;
-          color: var(--ink-primary);
-          text-decoration: none;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          transition: color var(--transition-fast);
-        }
-
-        .channel-link:hover {
-          color: var(--accent-primary);
-        }
-
-        .channel-address {
-          font-style: normal;
-          line-height: 1.4;
-          font-size: 0.84375rem;
-          color: var(--ink-primary);
-          font-weight: 500;
-        }
-
-        .channel-caption {
-          font-size: 0.75rem;
-          color: var(--ink-muted);
-          margin: 3px 0 0;
-        }
-
-        .channel-btn-group {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .channel-action-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          padding: 6px 11px;
-          border-radius: var(--radius-sm);
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-decoration: none;
-          cursor: pointer;
-          transition: all var(--transition-fast);
-          white-space: nowrap;
-          border: 1px solid transparent;
-        }
-
-        .copy-action {
-          background: var(--canvas-subtle);
-          border-color: var(--hairline);
-          color: var(--ink-secondary);
-        }
-
-        .copy-action:hover {
-          background: var(--canvas-subtle);
-          color: var(--ink-primary);
-          border-color: var(--hairline-medium);
-        }
-
-        .text-emerald {
-          color: #059669;
-        }
-
-        .write-action {
-          background: var(--accent-purple-light);
-          border-color: var(--accent-purple-border);
-          color: var(--accent-primary);
-        }
-
-        .write-action:hover {
-          background: var(--accent-primary);
-          color: #FFFFFF;
-          border-color: var(--accent-primary);
-        }
-
-        /* Developer Hub Box */
-        .developer-hub-card {
-          background: #0F1115;
-          color: #FFFFFF;
-          border: 1px solid #1F242F;
-          border-radius: var(--radius-lg);
-          padding: 22px;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          box-shadow: var(--shadow-card);
-        }
-
-        .dev-hub-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .dev-hub-title-group {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .dev-hub-title-group h4 {
-          font-size: 0.9375rem;
-          font-weight: 700;
-          color: #FFFFFF;
-          margin: 0;
-        }
-
-        .dev-radio-icon {
-          color: #60A5FA;
-        }
-
-        .dev-online-tag {
-          font-size: 0.6875rem;
-          font-family: var(--font-mono);
-          font-weight: 600;
-          color: #34D399;
-        }
-
-        .dev-hub-text {
-          font-size: 0.8125rem;
-          color: #94A3B8;
-          line-height: 1.45;
-          margin: 0;
-        }
-
-        .dev-hub-buttons {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          flex-wrap: wrap;
-        }
-
-        .btn-discord-join {
-          flex: 1;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          padding: 9px 14px;
-          background: #5865F2;
-          color: #FFFFFF;
-          border-radius: var(--radius-md);
-          font-size: 0.8125rem;
-          font-weight: 600;
-          text-decoration: none;
-          transition: background var(--transition-fast);
-        }
-
-        .btn-discord-join:hover {
-          background: #4752C4;
-        }
-
-        .btn-github-view {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          padding: 9px 12px;
-          background: #1F242F;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #E2E8F0;
-          border-radius: var(--radius-md);
-          font-size: 0.8125rem;
-          font-weight: 600;
-          text-decoration: none;
-          transition: all var(--transition-fast);
-        }
-
-        .btn-github-view:hover {
-          background: #2D3748;
-          color: #FFFFFF;
-        }
-
-        /* 04. FAQ Section */
-        .contact-faq-section {
-          padding: 72px 0 88px;
-          background: var(--canvas-primary);
-          border-top: 1px solid var(--hairline);
-        }
-
-        .faq-section-header {
-          text-align: center;
-          max-width: 600px;
-          margin: 0 auto 44px;
-        }
-
-        .section-title {
-          font-size: clamp(1.75rem, 3.5vw, 2.25rem);
-          font-weight: 800;
-          color: var(--ink-heading);
-          letter-spacing: -0.02em;
-          margin-bottom: 10px;
-        }
-
-        .section-description {
-          font-size: 0.9375rem;
-          color: var(--ink-secondary);
-          line-height: 1.55;
-        }
-
-        .faq-container {
-          max-width: 760px;
-          margin: 0 auto 48px;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .faq-card {
-          background: var(--canvas-card);
-          border: 1px solid var(--hairline);
-          border-radius: var(--radius-md);
-          overflow: hidden;
-          transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-        }
-
-        .faq-card.active {
-          border-color: var(--accent-purple-border);
-          box-shadow: 0 4px 14px rgba(91, 61, 245, 0.06);
-        }
-
-        .faq-toggle-button {
-          width: 100%;
-          padding: 18px 22px;
-          background: transparent;
-          border: none;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 16px;
-          text-align: left;
-          cursor: pointer;
-          color: var(--ink-heading);
-        }
-
-        .faq-question-text {
-          font-size: 0.9375rem;
-          font-weight: 600;
-          color: var(--ink-heading);
-        }
-
-        .faq-arrow {
-          color: var(--ink-secondary);
-          transition: transform var(--transition-base);
-          flex-shrink: 0;
-        }
-
-        .faq-arrow.open {
-          transform: rotate(180deg);
-          color: var(--accent-primary);
-        }
-
-        .faq-answer-panel {
-          padding: 0 22px 18px;
-          font-size: 0.875rem;
-          color: var(--ink-secondary);
-          line-height: 1.6;
-          border-top: 1px solid var(--hairline-ultra-light);
-          padding-top: 12px;
-        }
-
-        /* Team Roster Callout Box */
-        .team-roster-box {
-          max-width: 760px;
-          margin: 0 auto;
-          background: var(--canvas-secondary);
-          border: 1px dashed var(--hairline-medium);
-          border-radius: var(--radius-lg);
-          padding: 24px 28px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 20px;
-        }
-
-        .roster-callout-title {
-          font-size: 1rem;
-          font-weight: 700;
-          color: var(--ink-heading);
-          margin-bottom: 4px;
-        }
-
-        .roster-callout-desc {
-          font-size: 0.8125rem;
-          color: var(--ink-secondary);
-          margin: 0;
-        }
-
-        .roster-callout-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          white-space: nowrap;
-        }
-
-        /* Keyframes */
-        @keyframes pulse {
-          0% {
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-          }
-          70% {
-            box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
-          }
-          100% {
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-          }
-        }
-
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 1024px) {
-          .contact-grid-layout {
-            grid-template-columns: 1fr;
-            gap: 36px;
-          }
-          .content-card {
-            padding: 28px 22px;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .subpage-hero {
-            padding: 40px 0 28px;
-          }
-          .form-double-row {
-            grid-template-columns: 1fr;
-          }
-          .team-roster-box {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          .channel-box {
-            grid-template-columns: auto 1fr;
-            gap: 12px;
-          }
-          .channel-btn-group {
-            grid-column: span 2;
-            justify-content: flex-end;
-          }
-        }
-      `}</style>
     </div>
   );
 }

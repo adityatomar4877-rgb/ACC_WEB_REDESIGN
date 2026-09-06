@@ -2,8 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import PillarsSection from '@/components/PillarsSection';
 import SplitFlapText from '@/components/SplitFlapText';
+import ScrollStrokeTimeline from '@/components/ScrollStrokeTimeline';
+import SchemaValuesSection from '@/components/SchemaValuesSection';
+import TextType from '@/components/TextType';
 import { Sparkles, Terminal, Code2, ArrowRight } from 'lucide-react';
 
 export default function AboutPage() {
@@ -35,26 +37,40 @@ export default function AboutPage() {
     }
   ];
 
-  const values = [
+  const values: Array<{
+    num: string;
+    tag: string;
+    title: string;
+    desc: string;
+    variant: 'purple' | 'amber' | 'emerald' | 'rose';
+  }> = [
     {
       num: '01',
+      tag: 'CRAFTSMANSHIP',
       title: 'Craftsmanship Over Mediocrity',
-      desc: 'We care deeply about clean architectures, accessible semantics, responsive layouts, and performant code. No cut corners.'
+      desc: 'We care deeply about clean architectures, accessible semantics, responsive layouts, and performant code. No cut corners.',
+      variant: 'purple'
     },
     {
       num: '02',
+      tag: 'PRODUCTION',
       title: 'Ship Real Products',
-      desc: 'Tutorials don’t teach resilience; production traffic does. We build software that real students, faculty, and engineers rely on.'
+      desc: 'Tutorials don’t teach resilience; production traffic does. We build software that real students, faculty, and engineers rely on.',
+      variant: 'amber'
     },
     {
       num: '03',
+      tag: 'OPEN SOURCE',
       title: 'Open Source First',
-      desc: 'Knowledge belongs in the public square. We contribute upstream, open-source our internal tooling, and write comprehensive documentation.'
+      desc: 'Knowledge belongs in the public square. We contribute upstream, open-source our internal tooling, and write comprehensive documentation.',
+      variant: 'emerald'
     },
     {
       num: '04',
+      tag: 'RIGOR',
       title: 'Radical Inclusivity & Rigor',
-      desc: 'Whether you are writing your first Python loop or optimizing a CUDA kernel, curiosity and relentless consistency are what matter.'
+      desc: 'Whether you are writing your first Python loop or optimizing a CUDA kernel, curiosity and relentless consistency are what matter.',
+      variant: 'rose'
     }
   ];
 
@@ -161,62 +177,36 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 4 Pillars Section */}
-      <PillarsSection />
+      {/* Timeline Section with Skiper 19 Scroll Stroke */}
+      <ScrollStrokeTimeline milestones={milestones} />
 
-      {/* Timeline Section */}
-      <section className="timeline-section">
-        <div className="container">
-          <div className="section-meta">
-            <span>05 / OUR JOURNEY</span>
-          </div>
-          <h2 className="section-title">Milestones &amp; History</h2>
-          <p className="section-description" style={{ marginBottom: '48px' }}>
-            From an informal study group in CS Lab 102 to Amity University’s largest technical collective.
-          </p>
-
-          <div className="timeline-track">
-            {milestones.map((item) => (
-              <div key={item.year} className="timeline-item">
-                <div className="timeline-marker">
-                  <span className="marker-dot" />
-                  <span className="marker-year">{item.year}</span>
-                </div>
-                <div className="timeline-content">
-                  <h3 className="timeline-title">{item.title}</h3>
-                  <p className="timeline-desc">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Core Values Section */}
-      <section className="values-section">
-        <div className="container">
-          <div className="section-meta">
-            <span>06 / CORE VALUES</span>
-          </div>
-          <h2 className="section-title">What guides our code &amp; culture.</h2>
-
-          <div className="values-grid">
-            {values.map((v) => (
-              <div key={v.num} className="value-card">
-                <span className="val-num">{v.num}</span>
-                <h3 className="val-title">{v.title}</h3>
-                <p className="val-desc">{v.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Core Values Section with Continuous Background Sine-Wave Canvas & Schema Cards */}
+      <SchemaValuesSection />
 
       {/* Join CTA */}
       <section className="about-cta-section">
         <div className="container">
           <div className="about-cta-box">
-            <h2 className="about-cta-title">Ready to write code with us?</h2>
+            <TextType
+              as="h2"
+              className="about-cta-title"
+              text={[
+                "Ready to write code with us?",
+                "Ready to build real software?",
+                "Ready to ship to production?",
+                "Ready to join Amity Coding Club?",
+              ]}
+              typingSpeed={75}
+              pauseDuration={1500}
+              deletingSpeed={50}
+              showCursor
+              cursorCharacter="_"
+              variableSpeedEnabled={false}
+              variableSpeedMin={60}
+              variableSpeedMax={120}
+              cursorBlinkDuration={0.5}
+              startOnVisible
+            />
             <p className="about-cta-sub">
               Applications are reviewed on a rolling basis. Join our Discord community or apply for core team membership.
             </p>
@@ -427,70 +417,6 @@ export default function AboutPage() {
           font-weight: 500;
         }
 
-        /* Timeline */
-        .timeline-section {
-          padding: 80px 0;
-          background: var(--canvas-subtle);
-          border-top: 1px solid var(--hairline);
-          border-bottom: 1px solid var(--hairline);
-        }
-
-        .timeline-track {
-          display: flex;
-          flex-direction: column;
-          gap: 24px;
-        }
-
-        .timeline-item {
-          display: grid;
-          grid-template-columns: 140px 1fr;
-          gap: 32px;
-          background: var(--card-bg, #FFFFFF);
-          border: 1px solid var(--card-border, var(--hairline));
-          border-radius: 16px;
-          padding: 24px 28px;
-          box-shadow: var(--shadow-subtle);
-          transition: border-color 0.2s ease, transform 0.2s ease;
-        }
-
-        .timeline-item:hover {
-          border-color: var(--accent-primary);
-          transform: translateX(4px);
-        }
-
-        .timeline-marker {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .marker-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: var(--accent-primary);
-        }
-
-        .marker-year {
-          font-family: var(--font-mono, monospace);
-          font-size: 1.125rem;
-          font-weight: 800;
-          color: var(--ink-heading);
-        }
-
-        .timeline-title {
-          font-size: 1.125rem;
-          font-weight: 700;
-          color: var(--ink-heading);
-          margin-bottom: 6px;
-        }
-
-        .timeline-desc {
-          font-size: 0.875rem;
-          color: var(--ink-secondary);
-          line-height: 1.6;
-        }
-
         /* Values */
         .values-section {
           padding: 80px 0;
@@ -555,6 +481,8 @@ export default function AboutPage() {
           font-weight: 800;
           letter-spacing: -0.02em;
           margin-bottom: 12px;
+          min-height: 1.25em;
+          display: inline-block;
         }
 
         .about-cta-sub {

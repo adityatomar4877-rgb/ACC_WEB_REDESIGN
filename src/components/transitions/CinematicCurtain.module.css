@@ -1,0 +1,83 @@
+.curtainLayer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 100%, 0);
+  background: linear-gradient(
+    135deg,
+    #130728 0%,
+    #2E1065 18%,
+    #5B3DF5 42%,
+    #7C4DFF 62%,
+    #F59E0B 88%,
+    #F5B51B 100%
+  );
+}
+
+/* Leading luminous accent beam */
+.leadingEdge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(245, 181, 27, 0.95) 50%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+  box-shadow:
+    0 -4px 30px 4px rgba(245, 181, 27, 0.7),
+    0 -12px 60px 12px rgba(91, 61, 245, 0.5),
+    0 2px 20px rgba(255, 255, 255, 0.8);
+  opacity: 0.9;
+}
+
+/* Subtle secondary sheen */
+.ambientSheen {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(245, 181, 27, 0.08) 40%,
+    transparent 70%
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* State: Covering — sweeps in from bottom to cover full viewport */
+.covering {
+  transform: translate3d(0, 0%, 0);
+  transition: transform 420ms cubic-bezier(0.76, 0, 0.24, 1);
+  pointer-events: auto;
+}
+
+/* State: Covered — completely covers screen */
+.covered {
+  transform: translate3d(0, 0%, 0);
+  pointer-events: auto;
+}
+
+/* State: Revealing — sweeps up and off the top */
+.revealing {
+  transform: translate3d(0, -100%, 0);
+  transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+/* Reduced motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .curtainLayer {
+    display: none;
+  }
+}

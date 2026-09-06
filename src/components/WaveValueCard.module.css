@@ -1,0 +1,264 @@
+/* ==========================================================================
+   WaveValueCard Component Styles (SchemaCard Inspired Waveform Animation)
+   ========================================================================== */
+
+.cardRoot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+  min-height: 380px;
+}
+
+:global([data-theme='dark']) .cardRoot,
+:global(html.dark) .cardRoot {
+  background: linear-gradient(135deg, rgba(24, 20, 44, 0.65) 0%, rgba(13, 11, 24, 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.cardRoot:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.12), 0 0 24px rgba(91, 61, 245, 0.12);
+}
+
+:global([data-theme='dark']) .cardRoot:hover,
+:global(html.dark) .cardRoot:hover {
+  box-shadow: 0 24px 48px -10px rgba(0, 0, 0, 0.7), 0 0 28px rgba(124, 77, 255, 0.18);
+}
+
+/* ==========================================================================
+   Top Visual Canvas Container
+   ========================================================================== */
+
+.canvasWrapper {
+  position: relative;
+  width: 100%;
+  height: 154px;
+  background: #080A14;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Animated Grid Background Layer */
+.gridOverlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+  background-size: 16px 16px;
+  animation: gridPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes gridPulse {
+  0% { opacity: 0.08; }
+  100% { opacity: 0.16; }
+}
+
+/* The Animated Sine-Wave Canvas */
+.waveCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Top Inner Glow Vignette */
+.canvasVignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.7);
+}
+
+/* Live Status Badge in top right corner of canvas */
+.liveStatusBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #E2E8F0;
+  letter-spacing: 0.08em;
+  z-index: 3;
+}
+
+.liveIndicatorDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+/* Gradient divider line below canvas */
+.dividerLine {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.22), transparent);
+}
+
+/* ==========================================================================
+   Card Content Body
+   ========================================================================== */
+
+.cardBody {
+  padding: 22px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.tagRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.numBadge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.categoryTag {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+:global([data-theme='dark']) .categoryTag,
+:global(html.dark) .categoryTag {
+  color: #64748B;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ink-heading);
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+:global([data-theme='dark']) .cardTitle,
+:global(html.dark) .cardTitle {
+  color: #F8FAFC;
+}
+
+.cardDesc {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--ink-secondary);
+  margin: 0;
+  flex: 1;
+}
+
+:global([data-theme='dark']) .cardDesc,
+:global(html.dark) .cardDesc {
+  color: #94A3B8;
+}
+
+/* ==========================================================================
+   Color Theme Variants (Purple, Amber, Emerald, Rose)
+   ========================================================================== */
+
+/* 1. Purple Variant */
+.themePurple:hover {
+  border-color: rgba(91, 61, 245, 0.35);
+}
+.tagPurple {
+  background: rgba(91, 61, 245, 0.1);
+  border: 1px solid rgba(91, 61, 245, 0.28);
+  color: var(--accent-purple);
+}
+:global([data-theme='dark']) .tagPurple,
+:global(html.dark) .tagPurple {
+  background: rgba(168, 85, 247, 0.14);
+  border-color: rgba(168, 85, 247, 0.35);
+  color: #C084FC;
+}
+
+/* 2. Amber Variant */
+.themeAmber:hover {
+  border-color: rgba(245, 158, 11, 0.35);
+}
+.tagAmber {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  color: var(--accent-yellow-warm);
+}
+:global([data-theme='dark']) .tagAmber,
+:global(html.dark) .tagAmber {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+}
+
+/* 3. Emerald Variant */
+.themeEmerald:hover {
+  border-color: rgba(16, 185, 129, 0.35);
+}
+.tagEmerald {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  color: #059669;
+}
+:global([data-theme='dark']) .tagEmerald,
+:global(html.dark) .tagEmerald {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34D399;
+}
+
+/* 4. Rose Variant */
+.themeRose:hover {
+  border-color: rgba(236, 72, 153, 0.35);
+}
+.tagRose {
+  background: rgba(236, 72, 153, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.28);
+  color: #DB2777;
+}
+:global([data-theme='dark']) .tagRose,
+:global(html.dark) .tagRose {
+  background: rgba(236, 72, 153, 0.14);
+  border-color: rgba(236, 72, 153, 0.35);
+  color: #F472B6;
+}

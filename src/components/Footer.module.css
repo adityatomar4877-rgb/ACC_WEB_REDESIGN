@@ -1,12 +1,21 @@
 .siteFooter {
   background-color: var(--canvas-primary, #FFFFFF);
   border-top: 1px solid var(--hairline, rgba(0, 0, 0, 0.07));
-  padding: 64px 0 48px;
+  padding: 24px 0 48px;
   margin-top: auto;
   color: var(--ink-primary, #111827);
   font-family: var(--font-sans);
   position: relative;
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.curvedBannerWrap {
+  width: 100%;
+  overflow-x: clip;
+  overflow-y: visible;
+  margin-bottom: 44px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--hairline, rgba(0, 0, 0, 0.06));
 }
 
 .footerLayout {
@@ -95,49 +104,6 @@
   margin-bottom: 28px;
 }
 
-/* Status Pill Badge */
-.footerStatusBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 14px;
-  background: var(--canvas-card, #FFFFFF);
-  border: 1px solid var(--hairline-medium, #E2E8F0);
-  border-radius: 9999px;
-  box-shadow: var(--shadow-subtle, 0 1px 3px rgba(0, 0, 0, 0.03));
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.footerStatusBadge:hover {
-  border-color: var(--accent-primary, #CBD5E1);
-  box-shadow: 0 2px 8px var(--accent-purple-light, rgba(0, 0, 0, 0.06));
-}
-
-.statusIndicatorDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: #10B981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
-  animation: pulseGreen 2s infinite ease-in-out;
-}
-
-@keyframes pulseGreen {
-  0%, 100% {
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
-  }
-  50% {
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.08);
-  }
-}
-
-.statusText {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--ink-secondary, #334155);
-  letter-spacing: 0.07em;
-}
 
 /* Right Nav Grid */
 .footerNavGrid {

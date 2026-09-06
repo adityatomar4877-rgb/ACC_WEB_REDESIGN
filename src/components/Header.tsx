@@ -24,7 +24,7 @@ export default function Header() {
   }, [pathname]);
 
   const desktopNavItems = [
-    { label: 'Projects', href: '/projects' },
+    { label: 'Home', href: '/' },
     { label: 'Events', href: '/events' },
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' }
@@ -32,7 +32,6 @@ export default function Header() {
 
   const mobileNavItems = [
     { label: 'Home', href: '/' },
-    { label: 'Projects', href: '/projects' },
     { label: 'Events', href: '/events' },
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' }

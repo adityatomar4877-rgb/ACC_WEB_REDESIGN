@@ -179,6 +179,12 @@ body {
   color: var(--ink-primary);
 }
 
+.main-content {
+  flex: 1;
+  position: relative;
+  width: 100%;
+}
+
 ::selection {
   background-color: rgba(91, 61, 245, 0.15);
   color: var(--accent-purple);

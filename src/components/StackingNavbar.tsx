@@ -18,7 +18,7 @@ export interface StackingNavbarProps {
 }
 
 const DEFAULT_ITEMS: NavItem[] = [
-  { href: '/projects', label: 'Projects' },
+  { href: '/', label: 'Home' },
   { href: '/events', label: 'Events' },
   { href: '/about', label: 'About Us' },
   { href: '/contact', label: 'Contact' }
